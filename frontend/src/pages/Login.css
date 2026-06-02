@@ -1,113 +1,8 @@
 /* ==========================================================
-   Login page (Premium Redesign) — split-screen with mesh + glass card
+   Login & Landing Page Styles (DataMediator Pro)
    ========================================================== */
 
-.login-shell {
-  min-height: 100vh;
-  display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-  background: #070a13; /* Unified deep dark baseline */
-  overflow: hidden;
-}
-
-/* ─────────── LEFT VISUAL (ASIDE) ─────────── */
-.login-aside {
-  position: relative;
-  overflow: hidden;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  padding: 56px 56px;
-  background: #0b0d19;
-}
-
-/* Swirling fluid mesh gradient layer */
-.login-aside__mesh {
-  position: absolute;
-  inset: -10%; /* bleed out to hide edge clip on animate */
-  background:
-    radial-gradient(60% 40% at 20% 30%, rgba(99, 102, 241, 0.85), transparent 70%),
-    radial-gradient(50% 40% at 85% 25%, rgba(236, 72, 153, 0.60), transparent 70%),
-    radial-gradient(65% 50% at 25% 85%, rgba(14, 165, 233, 0.65), transparent 75%),
-    radial-gradient(55% 55% at 85% 80%, rgba(16, 185, 129, 0.50), transparent 75%),
-    linear-gradient(135deg, #18113c 0%, #0d0f26 50%, #030712 100%);
-  background-size: 130% 130%;
-  z-index: 0;
-  animation: mesh-drift 24s ease-in-out infinite;
-}
-
-@keyframes mesh-drift {
-  0%, 100% {
-    background-position: 0% 0%;
-  }
-  33% {
-    background-position: 10% 5%;
-    transform: scale(1.02) rotate(1deg);
-  }
-  66% {
-    background-position: -5% 12%;
-    transform: scale(0.98) rotate(-1deg);
-  }
-}
-
-/* Subtle grid overlay */
-.login-aside__grid {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-  background-size: 40px 40px;
-  mask-image: radial-gradient(ellipse at 40% 50%, black 0%, transparent 80%);
-  -webkit-mask-image: radial-gradient(ellipse at 40% 50%, black 0%, transparent 80%);
-  pointer-events: none;
-  z-index: 1;
-}
-
-.login-aside__content {
-  position: relative;
-  z-index: 2;
-  width: 100%;
-  max-width: 560px;
-  display: flex;
-  flex-direction: column;
-  gap: 36px;
-}
-
-/* Brand block & Custom Animated SVG Logo */
-.login-brand {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.login-brand__mark {
-  width: 52px;
-  height: 52px;
-  border-radius: 15px;
-  display: grid;
-  place-items: center;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #fff;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 
-    0 8px 32px rgba(99, 102, 241, 0.35),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  overflow: visible;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.login-brand:hover .login-brand__mark {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.3);
-  box-shadow: 
-    0 12px 40px rgba(99, 102, 241, 0.55),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
-  transform: translateY(-2px) scale(1.05);
-}
-
+/* ─── 1. Brand Custom Animated SVG Logo ─── */
 .logo-svg {
   width: 32px;
   height: 32px;
@@ -119,10 +14,10 @@
   transform-origin: center;
 }
 
-/* Float loop animations for layers */
+/* Float loop animations for logo layers */
 @keyframes layer-float-t {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-2.2px); }
+  50% { transform: translateY(-2px); }
 }
 @keyframes layer-float-m {
   0%, 100% { transform: translateY(0); }
@@ -130,7 +25,7 @@
 }
 @keyframes layer-float-b {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(2.2px); }
+  50% { transform: translateY(2px); }
 }
 
 .logo-layer--top { animation: layer-float-t 3.5s ease-in-out infinite; }
@@ -148,220 +43,121 @@
   transform: translateY(4.5px);
 }
 
-.login-brand__text {
+
+/* ─── 2. 3D Isometric Stack Mockup Styling ─── */
+.login-mockup-wrapper {
+  margin: 20px 0;
+  width: 100%;
   display: flex;
-  flex-direction: column;
-}
-
-.login-brand__name {
-  font-family: var(--font-display, 'Plus Jakarta Sans');
-  font-size: 22px;
-  font-weight: 800;
-  color: #fff;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-}
-
-.login-brand__tag {
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.50);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  margin-top: 3px;
-  font-weight: 600;
-}
-
-/* Hero Title & Subtitle */
-.login-hero__eyebrow {
-  display: inline-flex;
+  justify-content: center;
   align-items: center;
-  gap: 8px;
-  padding: 6px 14px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 999px;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  margin-bottom: 20px;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  min-height: 330px;
 }
 
-.login-hero__title {
-  font-family: var(--font-display, 'Plus Jakarta Sans');
-  font-size: clamp(30px, 3.8vw, 48px);
-  font-weight: 850;
-  line-height: 1.05;
-  letter-spacing: -0.03em;
-  color: #fff;
-  margin: 0 0 16px;
+.dashboard-mockup {
+  width: 100%;
+  max-width: 440px;
+  height: auto;
+  overflow: visible;
+  cursor: pointer;
 }
 
-.login-hero__title span {
-  background: linear-gradient(90deg, #c7d2fe 0%, #ec4899 50%, #818cf8 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+.mockup-stack {
+  transform: translate(0, 0);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.login-hero__subtitle {
-  font-size: 15px;
-  line-height: 1.7;
-  color: rgba(255, 255, 255, 0.76);
-  max-width: 480px;
-  margin: 0;
+.mockup-layer {
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: center center;
 }
 
-/* Animated statistics grid */
-.login-stats {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+/* Base floating positions for isometric view */
+.mockup-layer--bottom {
+  transform: translate(45px, 20px) scale(0.9) skewX(-20deg) rotate(10deg);
+  opacity: 0.95;
 }
 
-.login-stat {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 14px 16px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 14px;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+.mockup-layer--middle {
+  transform: translate(75px, -30px) scale(0.9) skewX(-20deg) rotate(10deg);
+  opacity: 0.98;
 }
 
-.login-stat:hover {
-  transform: translateY(-2px);
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.16);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+.mockup-layer--top {
+  transform: translate(105px, -80px) scale(0.9) skewX(-20deg) rotate(10deg);
+  opacity: 1;
 }
 
-.login-stat__ani {
-  width: 38px;
-  height: 38px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 10px;
-  display: grid;
-  place-items: center;
+/* Floating animation delays and offsets */
+@keyframes float-bot {
+  0%, 100% { transform: translate(45px, 20px) scale(0.9) skewX(-20deg) rotate(10deg) translateY(0); }
+  50% { transform: translate(45px, 20px) scale(0.9) skewX(-20deg) rotate(10deg) translateY(-5px); }
 }
 
-.login-stat__value {
-  font-family: var(--font-display, 'Plus Jakarta Sans');
-  font-size: 24px;
-  font-weight: 800;
-  color: #fff;
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
+@keyframes float-mid {
+  0%, 100% { transform: translate(75px, -30px) scale(0.9) skewX(-20deg) rotate(10deg) translateY(0); }
+  50% { transform: translate(75px, -30px) scale(0.9) skewX(-20deg) rotate(10deg) translateY(-10px); }
 }
 
-.login-stat__label {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.55);
-  margin-top: 4px;
-  text-transform: capitalize;
+@keyframes float-top {
+  0%, 100% { transform: translate(105px, -80px) scale(0.9) skewX(-20deg) rotate(10deg) translateY(0); }
+  50% { transform: translate(105px, -80px) scale(0.9) skewX(-20deg) rotate(10deg) translateY(-15px); }
 }
 
-/* Highlights list */
-.login-highlights {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+.mockup-layer--bottom {
+  animation: float-bot 6s ease-in-out infinite;
 }
 
-.login-highlights li {
-  display: flex;
-  gap: 16px;
-  align-items: flex-start;
-  padding: 8px 0;
+.mockup-layer--middle {
+  animation: float-mid 6s ease-in-out infinite;
+  animation-delay: 0.75s;
 }
 
-.login-highlights strong {
-  display: block;
-  font-size: 14px;
-  font-weight: 700;
-  color: #fff;
-  margin-bottom: 2px;
+.mockup-layer--top {
+  animation: float-top 6s ease-in-out infinite;
+  animation-delay: 1.5s;
 }
 
-.login-highlights span {
-  font-size: 12px;
-  line-height: 1.5;
-  color: rgba(255, 255, 255, 0.60);
+/* Hover effect: Expand stack and add colorful depth shadow */
+.dashboard-mockup:hover .mockup-layer--bottom {
+  transform: translate(30px, 60px) scale(0.9) skewX(-20deg) rotate(10deg);
+  filter: brightness(0.65) saturate(80%);
 }
 
-/* Foot metadata */
-.login-foot {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.40);
-  letter-spacing: 0.05em;
-  margin-top: auto;
+.dashboard-mockup:hover .mockup-layer--middle {
+  transform: translate(75px, -30px) scale(0.9) skewX(-20deg) rotate(10deg);
+  filter: brightness(0.85);
 }
 
-/* ─────────── RIGHT FORM PANEL ─────────── */
-.login-main {
-  display: grid;
-  place-items: center;
-  padding: 40px 32px;
-  background: radial-gradient(circle at 60% 40%, #0d1222 0%, #06080e 100%) !important;
-  position: relative;
+.dashboard-mockup:hover .mockup-layer--top {
+  transform: translate(120px, -120px) scale(0.9) skewX(-20deg) rotate(10deg);
+  filter: drop-shadow(0 25px 35px rgba(236, 72, 153, 0.45));
 }
 
-.login-main::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at 75% 20%, rgba(99, 102, 241, 0.15), transparent 50%),
-    radial-gradient(circle at 25% 80%, rgba(236, 72, 153, 0.10), transparent 50%);
-  pointer-events: none;
-}
 
-/* Floating back-card glows */
-.orb.orb--login {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.4;
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* Login Glassmorphic Card (Portal Card to prevent App.css namespace collisions) */
+/* ─── 3. Auth Portal Card (Modal Contents) ─── */
 .login-portal-card {
   position: relative;
-  z-index: 100 !important;
+  z-index: 100;
   width: 100%;
-  max-width: 480px;
   padding: 44px 42px;
-  background: rgba(13, 20, 38, 0.88) !important; /* Explicitly dark glassmorphic */
-  border: 1px solid rgba(255, 255, 255, 0.09) !important;
+  background: rgba(13, 20, 38, 0.92) !important; /* Rich glass dark background */
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
   box-shadow: 
-    0 24px 64px -16px rgba(0, 0, 0, 0.85),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+    0 24px 64px -16px rgba(0, 0, 0, 0.9),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
   backdrop-filter: blur(28px) !important;
   -webkit-backdrop-filter: blur(28px) !important;
-  border-radius: 20px !important;
+  border-radius: 24px !important;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .login-portal-card:hover {
-  border-color: rgba(255, 255, 255, 0.16) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
   box-shadow: 
     0 28px 72px -12px rgba(0, 0, 0, 0.95),
     0 0 25px rgba(99, 102, 241, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+    inset 0 1px 0 rgba(255, 255, 255, 0.07) !important;
 }
 
 .login-portal-card__header { 
@@ -383,12 +179,13 @@
 }
 
 .login-portal-card__title {
-  font-family: var(--font-display, 'Plus Jakarta Sans');
-  font-size: 34px;
+  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+  font-size: 32px;
   font-weight: 800;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.02em;
   color: #ffffff !important;
   margin: 0 0 8px;
+  line-height: 1.2;
 }
 
 .login-portal-card__subtitle {
@@ -403,7 +200,7 @@
   display: flex;
   flex-direction: column;
   gap: 18px;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 }
 
 .ds-field {
@@ -417,6 +214,7 @@
   font-weight: 600;
   color: #cbd5e1 !important;
   letter-spacing: 0.01em;
+  text-align: left;
 }
 
 /* Custom Input Container for Left Icons */
@@ -445,7 +243,7 @@
   border-radius: 12px !important;
   padding: 12px 16px !important;
   font-size: 14px !important;
-  font-family: var(--font-sans) !important;
+  font-family: inherit !important;
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2) !important;
 }
@@ -531,14 +329,13 @@
   gap: 10px;
   width: 100%;
   padding: 14px 20px;
-  background: var(--grad-brand, linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%)) !important;
+  background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%) !important;
   background-size: 200% auto !important;
   color: #fff !important;
   border: 0 !important;
   border-radius: 12px !important;
   font-size: 15px !important;
   font-weight: 700 !important;
-  font-family: var(--font-sans) !important;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
   box-shadow: 
@@ -624,7 +421,7 @@
 
 .login-demo--active {
   background: 
-    linear-gradient(#090d16, #090d16) padding-box,
+    linear-gradient(#0d1426, #0d1426) padding-box,
     linear-gradient(135deg, #6366f1 0%, #ec4899 100%) border-box !important;
   border: 1px solid transparent !important;
   box-shadow: 0 10px 24px -6px rgba(99, 102, 241, 0.45) !important;
@@ -665,7 +462,7 @@
 }
 
 .login-demo__creds {
-  font-family: var(--font-mono);
+  font-family: monospace;
   font-size: 10px;
   color: #94a3b8 !important;
   white-space: nowrap;
@@ -687,106 +484,9 @@
   color: rgba(255, 255, 255, 0.45) !important;
 }
 
-/* 3D Isometric Stack Mockup Styling */
-.login-mockup-wrapper {
-  margin: 10px 0 20px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 330px;
-}
-
-.dashboard-mockup {
-  width: 100%;
-  max-width: 440px;
-  height: auto;
-  overflow: visible;
-  cursor: pointer;
-}
-
-.mockup-stack {
-  transform: translate(0, 0);
-  transition: transform 0.6s var(--ease-out);
-}
-
-.mockup-layer {
-  transition: transform 0.6s var(--ease-out), filter 0.6s var(--ease-out), opacity 0.6s var(--ease-out);
-  transform-origin: center center;
-}
-
-/* Base floating positions for isometric view */
-.mockup-layer--bottom {
-  transform: translate(45px, 20px) scale(0.9) skewX(-20deg) rotate(10deg);
-  opacity: 0.95;
-}
-
-.mockup-layer--middle {
-  transform: translate(75px, -30px) scale(0.9) skewX(-20deg) rotate(10deg);
-  opacity: 0.98;
-}
-
-.mockup-layer--top {
-  transform: translate(105px, -80px) scale(0.9) skewX(-20deg) rotate(10deg);
-  opacity: 1;
-}
-
-/* Floating animation delays and offsets */
-@keyframes float-bot {
-  0%, 100% { transform: translate(45px, 20px) scale(0.9) skewX(-20deg) rotate(10deg) translateY(0); }
-  50% { transform: translate(45px, 20px) scale(0.9) skewX(-20deg) rotate(10deg) translateY(-5px); }
-}
-
-@keyframes float-mid {
-  0%, 100% { transform: translate(75px, -30px) scale(0.9) skewX(-20deg) rotate(10deg) translateY(0); }
-  50% { transform: translate(75px, -30px) scale(0.9) skewX(-20deg) rotate(10deg) translateY(-10px); }
-}
-
-@keyframes float-top {
-  0%, 100% { transform: translate(105px, -80px) scale(0.9) skewX(-20deg) rotate(10deg) translateY(0); }
-  50% { transform: translate(105px, -80px) scale(0.9) skewX(-20deg) rotate(10deg) translateY(-15px); }
-}
-
-.mockup-layer--bottom {
-  animation: float-bot 6s ease-in-out infinite;
-}
-
-.mockup-layer--middle {
-  animation: float-mid 6s ease-in-out infinite;
-  animation-delay: 0.75s;
-}
-
-.mockup-layer--top {
-  animation: float-top 6s ease-in-out infinite;
-  animation-delay: 1.5s;
-}
-
-/* Hover effect: Expand stack and add colorful depth shadow */
-.dashboard-mockup:hover .mockup-layer--bottom {
-  transform: translate(30px, 60px) scale(0.9) skewX(-20deg) rotate(10deg);
-  filter: brightness(0.65) saturate(80%);
-}
-
-.dashboard-mockup:hover .mockup-layer--middle {
-  transform: translate(75px, -30px) scale(0.9) skewX(-20deg) rotate(10deg);
-  filter: brightness(0.85);
-}
-
-.dashboard-mockup:hover .mockup-layer--top {
-  transform: translate(120px, -120px) scale(0.9) skewX(-20deg) rotate(10deg);
-  filter: drop-shadow(0 25px 35px rgba(236, 72, 153, 0.4));
-}
-
 /* ─────────── RESPONSIVE ─────────── */
-@media (max-width: 1024px) {
-  .login-shell { grid-template-columns: 1fr; }
-  .login-aside { display: none; }
-  .login-main  { padding: 32px 20px; min-height: 100vh; }
-  .login-portal-card  { padding: 36px 32px; }
-}
-
 @media (max-width: 480px) {
   .login-demo-grid { grid-template-columns: 1fr; }
-  .login-portal-card { padding: 28px 24px; }
-  .login-portal-card__title { font-size: 28px; }
+  .login-portal-card { padding: 28px 24px !important; }
+  .login-portal-card__title { font-size: 28px !important; }
 }
