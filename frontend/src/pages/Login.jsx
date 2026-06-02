@@ -185,7 +185,7 @@ export default function Login({ onLogin }) {
       <SEO title="DataMediator Pro — Médiation Intelligente de Données" 
            description="Fédérez vos bases de données hétérogènes en temps réel sous un schéma virtuel global" />
       
-      <div className="relative w-full min-h-screen flex flex-col items-center overflow-x-hidden font-sans" style={{ background: 'var(--bg-base)', color: 'var(--text-primary)' }}>
+      <div className="relative w-full min-h-screen flex flex-col items-center overflow-x-hidden font-sans bg-[#060813] text-slate-100">
         
         {/* ── BACKGROUND ORBS ── */}
         <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
