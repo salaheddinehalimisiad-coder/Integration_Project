@@ -102,7 +102,25 @@ export default function Login({ onLogin }) {
               transition={{ duration: 0.6, ease: "easeOut" }}
             >
               <div className="login-brand__mark">
-                <img src="/logo.png" alt="DataMediator Logo" />
+                <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="logo-svg">
+                  <defs>
+                    <linearGradient id="logo-grad-1" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#6366f1" />
+                      <stop offset="100%" stopColor="#a855f7" />
+                    </linearGradient>
+                    <linearGradient id="logo-grad-2" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#ec4899" />
+                      <stop offset="100%" stopColor="#f43f5e" />
+                    </linearGradient>
+                    <linearGradient id="logo-grad-3" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#06b6d4" />
+                      <stop offset="100%" stopColor="#10b981" />
+                    </linearGradient>
+                  </defs>
+                  <path d="M16 3L27 9L16 15L5 9L16 3Z" fill="url(#logo-grad-1)" className="logo-layer logo-layer--top"/>
+                  <path d="M16 10L27 16L16 22L5 16L16 10Z" fill="url(#logo-grad-2)" className="logo-layer logo-layer--mid"/>
+                  <path d="M16 17L27 23L16 29L5 23L16 17Z" fill="url(#logo-grad-3)" className="logo-layer logo-layer--bot"/>
+                </svg>
               </div>
               <div className="login-brand__text">
                 <h1 className="login-brand__name">DataMediator</h1>
@@ -200,41 +218,47 @@ export default function Login({ onLogin }) {
             <form onSubmit={submit} className="login-form" noValidate>
               <div className="ds-field">
                 <label className="ds-field__label" htmlFor="login-user">Identifiant</label>
-                <input
-                  id="login-user"
-                  ref={userRef}
-                  className="ds-input"
-                  type="text"
-                  autoComplete="username"
-                  placeholder="admin, hr, project, finance, viewer..."
-                  value={form.username}
-                  onChange={onChange('username')}
-                  disabled={loading}
-                />
+                <div className="login-input-wrapper">
+                  <UserRound size={16} className="login-input-icon" />
+                  <input
+                    id="login-user"
+                    ref={userRef}
+                    className="ds-input login-input-with-icon"
+                    type="text"
+                    autoComplete="username"
+                    placeholder="admin, hr, project, finance, viewer..."
+                    value={form.username}
+                    onChange={onChange('username')}
+                    disabled={loading}
+                  />
+                </div>
               </div>
 
               <div className="ds-field">
                 <label className="ds-field__label" htmlFor="login-pwd">Mot de passe</label>
-                <div className="ds-input-wrap">
-                  <input
-                    id="login-pwd"
-                    className="ds-input"
-                    type={showPwd ? 'text' : 'password'}
-                    autoComplete="current-password"
-                    placeholder="********"
-                    value={form.password}
-                    onChange={onChange('password')}
-                    disabled={loading}
-                  />
-                  <button
-                    type="button"
-                    className="ds-input-wrap__addon"
-                    onClick={() => setShowPwd((v) => !v)}
-                    aria-label={showPwd ? 'Masquer' : 'Afficher'}
-                    tabIndex={-1}
-                  >
-                    {showPwd ? <EyeOff size={16} /> : <Eye size={16} />}
-                  </button>
+                <div className="login-input-wrapper">
+                  <Lock size={16} className="login-input-icon" />
+                  <div className="ds-input-wrap login-input-wrap-with-icon">
+                    <input
+                      id="login-pwd"
+                      className="ds-input"
+                      type={showPwd ? 'text' : 'password'}
+                      autoComplete="current-password"
+                      placeholder="********"
+                      value={form.password}
+                      onChange={onChange('password')}
+                      disabled={loading}
+                    />
+                    <button
+                      type="button"
+                      className="ds-input-wrap__addon"
+                      onClick={() => setShowPwd((v) => !v)}
+                      aria-label={showPwd ? 'Masquer' : 'Afficher'}
+                      tabIndex={-1}
+                    >
+                      {showPwd ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
+                  </div>
                 </div>
               </div>
 
