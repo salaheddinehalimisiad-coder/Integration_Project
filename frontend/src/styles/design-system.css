@@ -9,7 +9,7 @@
 /* ---------- 1. TOKENS (Light theme = default) ---------- */
 :root {
   /* ----- Brand palette ----- */
-  --brand-50:  #eef2ff;
+  --brand-5:  #eef2ff;
   --brand-100: #e0e7ff;
   --brand-200: #c7d2fe;
   --brand-300: #a5b4fc;
@@ -37,7 +37,7 @@
   --neutral-200: #e2e8f0;
   --neutral-300: #cbd5e1;
   --neutral-400: #94a3b8;
-  --neutral-500: #64748b;
+  --neutral-505: #64748b;
   --neutral-600: #475569;
   --neutral-700: #334155;
   --neutral-800: #1e293b;
@@ -54,7 +54,7 @@
 
   --text-primary:   var(--neutral-900);
   --text-secondary: var(--neutral-600);
-  --text-tertiary:  var(--neutral-500);
+  --text-tertiary:  var(--neutral-505);
   --text-disabled:  var(--neutral-400);
   --text-inverse:   var(--neutral-0);
   --text-brand:     var(--brand-600);
@@ -66,7 +66,7 @@
 
   --accent:         var(--brand-600);
   --accent-hover:   var(--brand-700);
-  --accent-soft:    var(--brand-50);
+  --accent-soft:    var(--brand-5);
   --accent-soft-2:  var(--brand-100);
 
   /* ----- Radii ----- */
@@ -134,6 +134,12 @@
   --sidebar-w: 280px;
   --topbar-h: 64px;
   --max-w: 1440px;
+
+  /* ----- Landing page tokens (Login.jsx) ----- */
+  --grad-primary:   linear-gradient(135deg, #4f46e5 0%, #3d6ae8 50%, #06b6d4 100%);
+  --text-muted:     var(--neutral-505);
+  --text-dim:       var(--neutral-400);
+  --border-soft:    rgba(99, 102, 241, 0.15);
 }
 
 /* ---------- 2. DARK THEME ---------- */
@@ -168,6 +174,12 @@
   --shadow-lg:  0 12px 28px rgba(0, 0, 0, 0.6);
   --shadow-xl:  0 24px 48px rgba(0, 0, 0, 0.7);
   --shadow-brand: 0 12px 32px -8px rgba(99, 102, 241, 0.55);
+
+  /* ----- Landing page tokens (dark) ----- */
+  --grad-primary:   linear-gradient(135deg, #6366f1 0%, #4f8ef5 50%, #22d3ee 100%);
+  --text-muted:     var(--neutral-400);
+  --text-dim:       var(--neutral-505);
+  --border-soft:    rgba(99, 102, 241, 0.2);
 }
 
 /* ---------- 3. BASE ---------- */
@@ -784,3 +796,17 @@ button { font-family: inherit; cursor: pointer; }
 }
 .ds-editor .cm-editor { font-family: var(--font-mono) !important; font-size: 13px; }
 .ds-editor .cm-content { padding: 12px 0; }
+
+/* ---------- 24. LANDING PAGE UTILITIES ---------- */
+/* gradient-text used by Login.jsx (landing page) */
+.gradient-text {
+  background: var(--grad-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* animate-fade-in utility */
+.animate-fade-in {
+  animation: ds-fade-in 0.5s var(--ease-out) both;
+}
