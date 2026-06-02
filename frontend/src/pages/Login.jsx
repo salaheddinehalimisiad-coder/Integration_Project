@@ -181,7 +181,7 @@ export default function Login({ onLogin }) {
         <nav className="fixed top-0 inset-x-0 z-[100] w-full border-b backdrop-blur-2xl transition-colors duration-500" style={{ background: isDark ? 'rgba(10,13,26,0.85)' : 'rgba(246,248,255,0.85)', borderColor: 'var(--border-subtle)' }}>
           <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
             <div className="flex items-center gap-3 cursor-pointer" onClick={() => setShowAuthModal(true)}>
-              <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center border" style={{ background: 'var(--bg-surface-2)', borderColor: 'var(--border-default)' }}>
                 <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6">
                   <path d="M16 3L27 9L16 15L5 9L16 3Z" fill="#6366f1"/>
                   <path d="M16 10L27 16L16 22L5 16L16 10Z" fill="#ec4899"/>
@@ -234,11 +234,15 @@ export default function Login({ onLogin }) {
         <main className="relative z-10 w-full max-w-7xl mx-auto px-6 pt-36 pb-24 md:pt-44 md:pb-32 flex flex-col items-center">
           <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="w-full flex flex-col items-center text-center">
             
-            <motion.div variants={fadeInUp} className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border bg-white/5 border-white/10 text-xs font-semibold uppercase tracking-wider text-indigo-300 mb-6 backdrop-blur-md">
+            <motion.div 
+              variants={fadeInUp} 
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border text-xs font-semibold uppercase tracking-wider mb-6 backdrop-blur-md text-indigo-600 dark:text-indigo-300"
+              style={{ background: 'var(--bg-surface-2)', borderColor: 'var(--border-default)' }}
+            >
               <Sparkles size={12} className="text-indigo-400" /> PROJET ACADÉMIQUE — MASTER INTÉGRATION DE DONNÉES
             </motion.div>
 
-            <motion.h1 variants={fadeInUp} className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.08] mb-6 max-w-5xl text-white" style={{ color: 'var(--text-primary)' }}>
+            <motion.h1 variants={fadeInUp} className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.08] mb-6 max-w-5xl" style={{ color: 'var(--text-primary)' }}>
               Une seule requête virtuelle.<br />
               <span className="gradient-text">Six sources hétérogènes fédérées.</span>
             </motion.h1>
@@ -260,9 +264,9 @@ export default function Login({ onLogin }) {
 
             {/* Hero visual / abstract pipeline */}
             <motion.div variants={scaleIn} className="w-full max-w-5xl relative">
-              <div className="rounded-3xl border p-1 shadow-2xl shadow-indigo-900/5 bg-[#111525]" style={{ borderColor: 'var(--border-subtle)' }}>
-                <div className="rounded-2xl p-6 md:p-10 relative overflow-hidden" style={{ background: 'linear-gradient(180deg, var(--bg-surface) 0%, var(--bg-base) 100%)' }}>
-                  <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-center">
+              <div className="rounded-3xl border p-1 shadow-2xl" style={{ borderColor: 'var(--border-default)', background: 'var(--bg-surface-2)', boxShadow: 'var(--shadow-lg)' }}>
+                <div className="rounded-2xl p-6 md:p-10 relative overflow-hidden" style={{ background: 'var(--bg-surface)' }}>
+                  <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr_auto_1fr] gap-4 items-center">
                     {[
                       { icon: Database, label: '6 Sources Physiques', color: 'text-emerald-500', bg: 'rgba(16,185,129,0.08)', border: 'rgba(16,185,129,0.2)' },
                       { icon: BrainCircuit, label: 'Mapping GAV / LAV', color: 'text-indigo-500', bg: 'rgba(99,102,241,0.08)', border: 'rgba(99,102,241,0.2)' },
@@ -271,7 +275,11 @@ export default function Login({ onLogin }) {
                       { icon: BarChart4, label: 'Schéma Réconcilié', color: 'text-rose-500', bg: 'rgba(244,63,94,0.08)', border: 'rgba(244,63,94,0.2)' }
                     ].map((step, i) => (
                       <React.Fragment key={i}>
-                        <motion.div whileHover={{ y: -4 }} className={`flex flex-col items-center gap-3 p-5 rounded-2xl border ${step.border} ${step.bg} transition-all`}>
+                        <motion.div 
+                          whileHover={{ y: -4 }} 
+                          className="flex flex-col items-center gap-3 p-5 rounded-2xl border transition-all"
+                          style={{ backgroundColor: step.bg, borderColor: step.border }}
+                        >
                           <step.icon size={28} className={step.color} />
                           <span className="text-[10px] font-bold uppercase tracking-wider text-center" style={{ color: 'var(--text-secondary)' }}>{step.label}</span>
                         </motion.div>
@@ -334,20 +342,28 @@ export default function Login({ onLogin }) {
                       onClick={() => { setActiveTab(key); setIsPaused(true); }}
                       className={`flex items-start gap-4 p-5 rounded-2xl border text-left transition-all duration-300 cursor-pointer ${
                         isActive 
-                          ? 'bg-white/5 border-indigo-500/40 shadow-[0_4px_20px_rgba(99,102,241,0.1)]' 
-                          : 'bg-transparent border-transparent hover:bg-white/2 hover:border-white/5'
+                          ? 'shadow-[0_4px_20px_rgba(99,102,241,0.1)]' 
+                          : 'border-transparent hover:bg-black/5 dark:hover:bg-white/2'
                       }`}
+                      style={{
+                        background: isActive ? 'var(--bg-surface-2)' : 'transparent',
+                        borderColor: isActive ? 'var(--border-brand)' : 'transparent',
+                      }}
                     >
-                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${comp.bg}`} style={{ border: `1px solid ${comp.border}` }}>
+                      <div 
+                        className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" 
+                        style={{ backgroundColor: comp.bg, border: `1px solid ${comp.border}` }}
+                      >
                         <Icon size={20} className={comp.color} />
                       </div>
                       <div>
-                        <h3 className="text-sm font-bold text-white mb-1">{comp.title}</h3>
+                        <h3 className="text-sm font-bold mb-1" style={{ color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)' }}>{comp.title}</h3>
                         {isActive && (
                           <motion.p 
                             initial={{ opacity: 0, height: 0 }} 
                             animate={{ opacity: 1, height: 'auto' }} 
-                            className="text-xs text-slate-300 mt-2 leading-relaxed"
+                            className="text-xs mt-2 leading-relaxed"
+                            style={{ color: 'var(--text-secondary)' }}
                           >
                             {comp.desc}
                           </motion.p>
@@ -363,7 +379,7 @@ export default function Login({ onLogin }) {
                 onMouseEnter={() => setIsPaused(true)} 
                 onMouseLeave={() => setIsPaused(false)} 
                 className="w-full lg:w-1/2 h-[380px] rounded-[32px] border p-8 relative flex items-center justify-center overflow-hidden shadow-2xl transition-all duration-500" 
-                style={{ background: 'rgba(10, 15, 30, 0.4)', borderColor: 'var(--border-soft)' }}
+                style={{ background: 'rgba(10, 15, 30, 0.45)', borderColor: 'var(--border-soft)' }}
               >
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.04)_0,transparent_75%)] pointer-events-none"></div>
 
@@ -371,10 +387,10 @@ export default function Login({ onLogin }) {
                   {activeTab === 'decomposer' && (
                     <motion.div key="decomposer" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="w-full h-full flex flex-col items-center justify-center text-center">
                       <Blocks size={80} className="text-emerald-500/20 mb-8 animate-pulse" />
-                      <div className="flex gap-4 mb-8">
-                        <div className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-emerald-400">Global Query</div>
+                      <div className="flex gap-4 mb-8 items-center">
+                        <div className="px-4 py-2 rounded-xl text-xs font-mono border bg-white/5 border-white/10 text-slate-300">Global Query</div>
                         <div className="flex items-center text-white/40"><ArrowRight size={14} /></div>
-                        <div className="px-4 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-xs font-mono text-emerald-300">Local Queries</div>
+                        <div className="px-4 py-2 rounded-xl border text-xs font-mono bg-emerald-500/10 border-emerald-500/20 text-emerald-300">Local Queries</div>
                       </div>
                       <span className="font-mono text-[10px] text-emerald-400 font-bold uppercase tracking-widest">DÉCOMPOSITION GAV / LAV</span>
                     </motion.div>
@@ -384,9 +400,9 @@ export default function Login({ onLogin }) {
                     <motion.div key="rewriter" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="w-full h-full flex flex-col items-center justify-center text-center">
                       <Network size={80} className="text-indigo-500/20 mb-8" />
                       <div className="grid grid-cols-3 gap-6 items-center max-w-sm">
-                        <div className="px-3 py-4 rounded-xl bg-indigo-500/5 border border-indigo-500/20 text-[10px] font-mono text-indigo-300">Bucket Algorithm</div>
-                        <div className="px-3 py-4 rounded-xl bg-white/5 border border-white/10 text-[10px] font-mono text-slate-300">Minicon Plan</div>
-                        <div className="px-3 py-4 rounded-xl bg-indigo-500/5 border border-indigo-500/20 text-[10px] font-mono text-indigo-300">Inverse Rules</div>
+                        <div className="px-3 py-4 rounded-xl border text-[10px] font-mono bg-indigo-500/5 border-indigo-500/20 text-indigo-300">Bucket Algorithm</div>
+                        <div className="px-3 py-4 rounded-xl border text-[10px] font-mono bg-white/5 border-white/10 text-slate-300">Minicon Plan</div>
+                        <div className="px-3 py-4 rounded-xl border text-[10px] font-mono bg-indigo-500/5 border-indigo-500/20 text-indigo-300">Inverse Rules</div>
                       </div>
                       <span className="font-mono text-[10px] text-indigo-400 font-bold uppercase tracking-widest mt-8">MOTEUR DE RÉÉCRITURE (LAV)</span>
                     </motion.div>
@@ -414,7 +430,7 @@ export default function Login({ onLogin }) {
                   {activeTab === 'resolver' && (
                     <motion.div key="resolver" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="w-full h-full flex flex-col items-center justify-center text-center">
                       <GitBranch size={80} className="text-purple-500/20 mb-8" />
-                      <div className="p-5 rounded-2xl bg-slate-900/60 border border-white/5 max-w-xs text-left">
+                      <div className="p-5 rounded-2xl border max-w-xs text-left bg-slate-900/60 border-white/5">
                         <div className="text-[10px] font-mono text-purple-400 mb-2">{">> Entity Conflict Detected"}</div>
                         <div className="text-[10px] font-mono text-slate-300">Resolved via priority mapping :</div>
                         <div className="text-[10px] font-mono text-emerald-400 font-bold mt-1">{"✓ emp_id 101 -> PostgreSQL Source"}</div>
@@ -449,7 +465,7 @@ export default function Login({ onLogin }) {
 
             <motion.div variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* BEFORE */}
-              <motion.div variants={slideInLeft} className="rounded-[28px] border p-8 bg-slate-900/40" style={{ borderColor: 'var(--border-subtle)' }}>
+              <motion.div variants={slideInLeft} className="rounded-[28px] border p-8" style={{ borderColor: 'var(--border-subtle)', background: 'var(--bg-surface-2)' }}>
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-red-500/10 border border-red-500/20">
                     <Clock size={20} className="text-red-500" />
@@ -464,15 +480,13 @@ export default function Login({ onLogin }) {
                     { label: 'Sécurité RBAC', val: 'Configurée séparément sur 6 bases' },
                     { label: 'Gestion des doublons', val: 'Scripts complexes de nettoyage post-chargement' },
                   ].map((item, i) => (
-                    <div key={i} className="flex items-center justify-between p-4 rounded-xl bg-white/2">
+                    <div key={i} className="flex items-center justify-between p-4 rounded-xl" style={{ background: 'var(--bg-surface)' }}>
                       <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>{item.label}</span>
                       <span className="text-sm font-bold text-red-400">{item.val}</span>
                     </div>
                   ))}
                 </div>
               </motion.div>
-
-              {/* AFTER */}
               <motion.div variants={slideInRight} className="rounded-[28px] border p-8 relative overflow-hidden" style={{ background: 'var(--bg-surface)', borderColor: 'rgba(61,106,232,0.15)' }}>
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(61,106,232,0.06)_0,transparent_50%)]" />
                 <div className="flex items-center gap-3 mb-6 relative z-10">
