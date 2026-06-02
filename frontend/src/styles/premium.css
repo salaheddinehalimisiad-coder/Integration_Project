@@ -1,0 +1,493 @@
+/* =============================================================
+   DataMediator Pro — Premium layer (gradients, glass, glow, mesh)
+   Loaded AFTER design-system.css. Provides display-grade visuals
+   without breaking the existing layout primitives.
+   ============================================================= */
+
+/* ─────── 1. Display typography ─────── */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
+
+:root {
+  --font-display: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+
+  /* Premium gradients */
+  --grad-brand:        linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+  --grad-brand-soft:   linear-gradient(135deg, rgba(99,102,241,0.10) 0%, rgba(139,92,246,0.05) 50%, rgba(236,72,153,0.10) 100%);
+  --grad-sunset:       linear-gradient(135deg, #f59e0b 0%, #ef4444 50%, #a855f7 100%);
+  --grad-emerald:      linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
+  --grad-ocean:        linear-gradient(135deg, #0ea5e9 0%, #4f46e5 100%);
+  --grad-aurora:       linear-gradient(135deg, #4f46e5 0%, #06b6d4 50%, #10b981 100%);
+  --grad-violet:       linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);
+  --grad-amber-pink:   linear-gradient(135deg, #f59e0b 0%, #ec4899 100%);
+
+  /* Glass effects */
+  --glass-bg:   rgba(255, 255, 255, 0.72);
+  --glass-border: rgba(255, 255, 255, 0.6);
+  --glass-blur: saturate(160%) blur(18px);
+
+  /* Premium shadows */
+  --shadow-glow-brand: 0 0 0 1px rgba(99,102,241,0.10), 0 20px 50px -20px rgba(99,102,241,0.40);
+  --shadow-glow-pink:  0 0 0 1px rgba(236,72,153,0.10), 0 20px 50px -20px rgba(236,72,153,0.40);
+  --shadow-soft:       0 8px 32px -8px rgba(15,23,42,0.10);
+}
+
+[data-theme="dark"] {
+  --glass-bg:     rgba(20, 30, 50, 0.65);
+  --glass-border: rgba(148, 163, 184, 0.14);
+  --shadow-soft:  0 8px 32px -8px rgba(0,0,0,0.55);
+  --shadow-glow-brand: 0 0 0 1px rgba(99,102,241,0.20), 0 20px 50px -20px rgba(99,102,241,0.55);
+}
+
+/* ─────── 2. Ambient mesh background (full-page) ─────── */
+.mesh-bg {
+  position: relative;
+  isolation: isolate;
+}
+.mesh-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 12% 10%, rgba(99,102,241,0.22), transparent 35%),
+    radial-gradient(circle at 90% 8%,  rgba(236,72,153,0.16), transparent 38%),
+    radial-gradient(circle at 75% 95%, rgba(16,185,129,0.16), transparent 40%),
+    radial-gradient(circle at 5% 95%,  rgba(245,158,11,0.13), transparent 36%);
+  pointer-events: none;
+}
+[data-theme="dark"] .mesh-bg::before {
+  background:
+    radial-gradient(circle at 12% 10%, rgba(99,102,241,0.28), transparent 35%),
+    radial-gradient(circle at 90% 8%,  rgba(236,72,153,0.20), transparent 38%),
+    radial-gradient(circle at 75% 95%, rgba(16,185,129,0.20), transparent 40%),
+    radial-gradient(circle at 5% 95%,  rgba(245,158,11,0.15), transparent 36%);
+}
+
+/* Animated grid overlay (subtle) */
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(99,102,241,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(99,102,241,0.06) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: 0 0, 0 0;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+}
+
+/* ─────── 3. Glass card ─────── */
+.glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-soft);
+}
+
+/* ─────── 4. Hero header ─────── */
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding: 36px 32px;
+  border-radius: var(--r-xl);
+  background: var(--grad-brand);
+  color: #ffffff;
+  box-shadow: var(--shadow-glow-brand);
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,0.18), transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(255,255,255,0.08), transparent 50%);
+  pointer-events: none;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: radial-gradient(ellipse at center, black 20%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 20%, transparent 75%);
+  pointer-events: none;
+}
+.hero__content { position: relative; z-index: 1; }
+.hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: var(--r-full);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  backdrop-filter: blur(8px);
+  margin-bottom: 14px;
+}
+.hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 3.8vw, 42px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  margin: 0 0 10px;
+  color: #fff;
+}
+.hero__title span {
+  background: linear-gradient(90deg, #fff 0%, #c7d2fe 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.hero__subtitle {
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.82);
+  max-width: 640px;
+  margin: 0;
+}
+.hero__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  margin-top: 18px;
+  background: rgba(255,255,255,0.92);
+  color: var(--brand-700);
+  border-radius: var(--r-md);
+  font-weight: 700;
+  font-size: 14px;
+  text-decoration: none;
+  transition: all var(--t-base) var(--ease-out);
+}
+.hero__cta:hover {
+  background: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px -8px rgba(0,0,0,0.2);
+  color: var(--brand-800);
+}
+.hero__pills {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+}
+.hero__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: rgba(255,255,255,0.14);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: var(--r-full);
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.92);
+  backdrop-filter: blur(8px);
+}
+
+/* ─────── 5. KPI card (premium) ─────── */
+.kpi {
+  position: relative;
+  overflow: hidden;
+  padding: 22px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg);
+  transition: all var(--t-base) var(--ease-out);
+}
+.kpi::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--grad-brand);
+  opacity: 0.85;
+}
+.kpi--success::before { background: var(--grad-emerald); }
+.kpi--ocean::before   { background: var(--grad-ocean); }
+.kpi--sunset::before  { background: var(--grad-sunset); }
+.kpi--violet::before  { background: var(--grad-violet); }
+.kpi--amber::before   { background: var(--grad-amber-pink); }
+
+.kpi:hover {
+  transform: translateY(-3px);
+  border-color: var(--border-default);
+  box-shadow: var(--shadow-lg);
+}
+.kpi__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.kpi__label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+.kpi__icon {
+  width: 38px; height: 38px;
+  border-radius: var(--r-md);
+  display: grid; place-items: center;
+  background: var(--grad-brand-soft);
+  color: var(--accent);
+}
+.kpi--success .kpi__icon { background: rgba(16,185,129,0.12); color: var(--success-500); }
+.kpi--sunset  .kpi__icon { background: rgba(245,158,11,0.12);  color: var(--warning-500); }
+.kpi--ocean   .kpi__icon { background: rgba(14,165,233,0.12);  color: var(--info-500); }
+.kpi--violet  .kpi__icon { background: rgba(168,85,247,0.12);  color: #a855f7; }
+.kpi--amber   .kpi__icon { background: rgba(245,158,11,0.12);  color: var(--warning-500); }
+
+.kpi__value {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+  font-variant-numeric: tabular-nums;
+}
+.kpi__trend {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+.kpi__trend--up   { color: var(--success-500); }
+.kpi__trend--down { color: var(--danger-500); }
+.kpi__sparkline {
+  position: absolute;
+  right: 16px;
+  bottom: 14px;
+  width: 90px;
+  height: 32px;
+  opacity: 0.55;
+}
+
+/* ─────── 6. Section title ─────── */
+.section {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.section__title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--text-primary);
+  margin: 0;
+}
+.section__hint {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin: 4px 0 0;
+}
+
+/* ─────── 7. Status pill with pulse ─────── */
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: var(--r-full);
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid;
+}
+.status--online {
+  background: rgba(16,185,129,0.08);
+  border-color: rgba(16,185,129,0.25);
+  color: var(--success-500);
+}
+.status--idle {
+  background: rgba(245,158,11,0.08);
+  border-color: rgba(245,158,11,0.25);
+  color: var(--warning-500);
+}
+.status--offline {
+  background: rgba(239,68,68,0.08);
+  border-color: rgba(239,68,68,0.25);
+  color: var(--danger-500);
+}
+.status .dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  position: relative;
+}
+.status--online .dot::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.4;
+  animation: pulse-ring 2s ease-in-out infinite;
+}
+@keyframes pulse-ring {
+  0%   { transform: scale(0.85); opacity: 0.5; }
+  70%  { transform: scale(1.6);  opacity: 0;   }
+  100% { transform: scale(0.85); opacity: 0;   }
+}
+
+/* ─────── 8. Floating orbs (decorative) ─────── */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(40px);
+  opacity: 0.55;
+  pointer-events: none;
+  animation: orb-float 18s ease-in-out infinite;
+}
+.orb--brand   { background: radial-gradient(circle, rgba(99,102,241,0.6),  transparent 70%); }
+.orb--pink    { background: radial-gradient(circle, rgba(236,72,153,0.5),  transparent 70%); }
+.orb--emerald { background: radial-gradient(circle, rgba(16,185,129,0.5),  transparent 70%); }
+.orb--amber   { background: radial-gradient(circle, rgba(245,158,11,0.5),  transparent 70%); }
+
+@keyframes orb-float {
+  0%, 100% { transform: translate(0, 0)     scale(1); }
+  33%      { transform: translate(20px, -30px) scale(1.1); }
+  66%      { transform: translate(-20px, 20px) scale(0.9); }
+}
+
+/* ─────── 9. Animated underline link ─────── */
+.fancy-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+.fancy-link::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform var(--t-base) var(--ease-out);
+}
+.fancy-link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* ─────── 10. Card with gradient border (only on hover) ─────── */
+.gradient-card {
+  position: relative;
+  background: var(--bg-surface);
+  border-radius: var(--r-lg);
+  padding: 1px;
+  transition: all var(--t-base) var(--ease-out);
+}
+.gradient-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: var(--grad-brand);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  opacity: 0;
+  transition: opacity var(--t-base) var(--ease-out);
+}
+.gradient-card:hover::before { opacity: 1; }
+.gradient-card__inner {
+  background: var(--bg-surface);
+  border-radius: calc(var(--r-lg) - 1px);
+  padding: 20px;
+  border: 1px solid var(--border-subtle);
+}
+
+/* ─────── 11. Gradient text ─────── */
+.gradient-text {
+  background: var(--grad-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ─────── 12. Counter animation reveal ─────── */
+@keyframes count-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.count-up { animation: count-up 0.5s var(--ease-out) both; }
+
+/* ─────── 13. Sidebar gradient brand ─────── */
+.brand-glow {
+  position: relative;
+}
+.brand-glow::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: inherit;
+  background: var(--grad-brand);
+  opacity: 0;
+  filter: blur(12px);
+  z-index: -1;
+  transition: opacity var(--t-base) var(--ease-out);
+}
+.brand-glow:hover::after { opacity: 0.55; }
+
+/* ─────── 14. Premium chip ─────── */
+.chip-pro {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-full);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--t-fast) var(--ease-out);
+}
+.chip-pro:hover {
+  border-color: transparent;
+  background-image:
+    linear-gradient(var(--bg-surface), var(--bg-surface)),
+    var(--grad-brand);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+
+/* ─────── 15. Skeleton premium (animated wave) ─────── */
+@keyframes wave {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.skel-wave {
+  background: linear-gradient(90deg,
+    var(--bg-surface-2) 0%,
+    var(--bg-base)      50%,
+    var(--bg-surface-2) 100%);
+  background-size: 200% 100%;
+  animation: wave 1.4s linear infinite;
+  border-radius: var(--r-sm);
+}

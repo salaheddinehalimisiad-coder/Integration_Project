@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #4f46e5;
+  --color-primary-dark: #4338ca;
+  --color-dark: #0f172a;
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/5 border border-white/10 rounded-2xl p-5 backdrop-blur-md;
+  }
+  .glass-panel {
+    @apply bg-slate-900/60 border border-slate-700/50 rounded-2xl backdrop-blur-lg shadow-xl;
+  }
+}
+
+/* body styling is owned by design-system.css */
+button,
+input,
+textarea {
+  font: inherit;
+}

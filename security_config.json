@@ -1,0 +1,119 @@
+{
+  "security": {
+    "jwt": {
+      "enabled": true,
+      "algorithm": "HS256",
+      "secret_key": "default-secret-key-change-in-production",
+      "expire_hours": 8,
+      "claims": {
+        "sub": "username",
+        "role": "user_role",
+        "iat": "issued_at_timestamp",
+        "exp": "expiration_timestamp"
+      }
+    },
+    "password_hashing": {
+      "algorithm": "bcrypt",
+      "rounds": 10,
+      "fallback": "sha256_salted"
+    },
+    "rate_limiting": {
+      "enabled": true,
+      "endpoints": {
+        "/api/auth/login": {
+          "max_attempts": 5,
+          "window_seconds": 60,
+          "by": "client_ip"
+        }
+      }
+    },
+    "cors": {
+      "allowed_origins": [
+        "http://localhost:3000",
+        "http://127.0.0.1:3000"
+      ],
+      "allow_credentials": true,
+      "allow_methods": ["*"],
+      "allow_headers": ["*"]
+    }
+  },
+  "authentication": {
+    "protected_endpoints": [
+      "GET /api/auth/me",
+      "POST /api/query/execute",
+      "POST /api/query/explain",
+      "GET /api/schema/global",
+      "GET /api/schema/sources",
+      "POST /api/dashboard/metrics",
+      "POST /api/dashboard/export",
+      "POST /api/conflicts/list",
+      "GET /api/conflicts/rules",
+      "GET /api/conflicts/history",
+      "POST /api/conflicts/resolve",
+      "POST /api/conflicts/auto-resolve",
+      "GET /api/reconciliation",
+      "GET /api/cache/stats",
+      "POST /api/cache/clear",
+      "POST /api/cache/invalidate",
+      "GET /api/performance/stats",
+      "GET /api/monitoring/metrics",
+      "GET /api/monitoring/alerts",
+      "POST /api/monitoring/alerts/{alert_id}/resolve",
+      "POST /api/monitoring/start",
+      "POST /api/monitoring/stop",
+      "POST /api/admin/reset-sources",
+      "POST /api/admin/add-demo-employee",
+      "GET /api/user/profile",
+      "PUT /api/user/profile",
+      "GET /api/user/preferences",
+      "PUT /api/user/preferences",
+      "GET /api/user/favorites",
+      "GET /api/user/activity",
+      "POST /api/user/change-password",
+      "GET /api/user/export",
+      "POST /api/reports/generate",
+      "GET /api/reports/formats",
+      "POST /api/reports/schedule",
+      "GET /api/reports/scheduled",
+      "POST /api/reports/run-scheduled"
+    ],
+    "public_endpoints": [
+      "GET /",
+      "GET /api/health",
+      "GET /api/health/db_mode",
+      "GET /api/schema/sources",
+      "GET /api/monitoring/health",
+      "GET /api/mappings",
+      "POST /api/auth/login"
+    ],
+    "admin_only_endpoints": [
+      "POST /api/admin/reset-sources",
+      "POST /api/admin/add-demo-employee",
+      "POST /api/monitoring/start",
+      "POST /api/monitoring/stop",
+      "POST /api/cache/clear",
+      "POST /api/monitoring/alerts/{alert_id}/resolve"
+    ]
+  },
+  "passwords": {
+    "min_length": 8,
+    "require_uppercase": true,
+    "require_lowercase": true,
+    "require_numbers": true,
+    "require_special_chars": false,
+    "max_age_days": 90
+  },
+  "audit": {
+    "log_login_attempts": true,
+    "log_failed_auth": true,
+    "log_admin_actions": true,
+    "log_data_access": false
+  },
+  "dependencies": {
+    "PyJWT": "2.10.1",
+    "bcrypt": "4.2.1",
+    "FastAPI": "0.128.0",
+    "pydantic": "2.10.4",
+    "pydantic-settings": "2.6.1"
+  }
+}

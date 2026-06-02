@@ -1,0 +1,12 @@
+{
+  "name": "newshub-root",
+  "version": "2.0.0",
+  "description": "NewsHub — Plateforme de médiation de données GAV/LAV",
+  "scripts": {
+    "frontend": "cd frontend && npm run dev",
+    "backend-enterprise": "python -m uvicorn main:app --host 0.0.0.0 --port 5001 --reload",
+    "backend-newshub": "python server.py",
+    "dev": "npm run frontend",
+    "setup": "python sources/setup_sources.py && cd frontend && npm install"
+  }
+}

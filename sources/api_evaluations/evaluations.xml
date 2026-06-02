@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Evaluations>
+    <Eval employeeMail="amine.brahimi@univ-dz.dz">
+        <Score>98</Score>
+        <Feedback>Expert IA exceptionnel, leader sur E-Djazair</Feedback>
+    </Eval>
+    <Eval employeeMail="s.mansouri@it-dz.com">
+        <Score>85</Score>
+        <Feedback>Très bonne gestion de la cybersécurité</Feedback>
+    </Eval>
+    <Eval employeeMail="m.khelifi@tech-algerie.dz">
+        <Score>90</Score>
+        <Feedback>Excellente maîtrise du génie logiciel</Feedback>
+    </Eval>
+</Evaluations>

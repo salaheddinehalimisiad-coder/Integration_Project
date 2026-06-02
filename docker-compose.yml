@@ -1,0 +1,100 @@
+# Docker Compose configuration for Data Mediator Integration Project
+
+
+services:
+  postgres_hr:
+    image: postgres:16
+    container_name: datamediator_postgres_hr
+    environment:
+      POSTGRES_DB: hr_db
+      POSTGRES_USER: mediator_hr
+      POSTGRES_PASSWORD: mediator_hr_pwd
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./sources/postgres_hr/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mediator_hr -d hr_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - datamediator-network
+    restart: unless-stopped
+
+  mysql_projects:
+    image: mysql:8.4
+    container_name: datamediator_mysql_projects
+    environment:
+      MYSQL_DATABASE: project_db
+      MYSQL_USER: mediator_projects
+      MYSQL_PASSWORD: mediator_projects_pwd
+      MYSQL_ROOT_PASSWORD: root_pwd
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./sources/mysql_projects/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot_pwd"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks:
+      - datamediator-network
+    restart: unless-stopped
+
+  mongo_finance:
+    image: mongo:7
+    container_name: datamediator_mongo_finance
+    environment:
+      MONGO_INITDB_DATABASE: finance_db
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - ./sources/mongo_finance/seed.js:/docker-entrypoint-initdb.d/seed.js:ro
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks:
+      - datamediator-network
+    restart: unless-stopped
+
+  adminer:
+    image: adminer:latest
+    container_name: datamediator_adminer
+    ports:
+      - "8080:8080"
+    networks:
+      - datamediator-network
+    restart: unless-stopped
+    depends_on:
+      - postgres_hr
+      - mysql_projects
+
+  mongo-express:
+    image: mongo-express:latest
+    container_name: datamediator_mongo_express
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://datamediator_mongo_finance:27017/
+      ME_CONFIG_MONGODB_ENABLE_ADMIN: true
+    ports:
+      - "8081:8081"
+    networks:
+      - datamediator-network
+    restart: unless-stopped
+    depends_on:
+      - mongo_finance
+
+volumes:
+  postgres_data:
+  mysql_data:
+  mongodb_data:
+
+networks:
+  datamediator-network:
+    driver: bridge

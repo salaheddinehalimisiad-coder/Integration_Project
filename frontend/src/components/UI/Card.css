@@ -1,0 +1,150 @@
+.card {
+  background: var(--surface);
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Variants */
+.card-default {
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.card-glass {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.card-dark {
+  background: var(--text);
+  color: var(--surface);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card-gradient {
+  background: linear-gradient(135deg, var(--surface), var(--surface2));
+  border: 1px solid var(--border);
+}
+
+/* Padding */
+.card-padding-sm {
+  padding: 12px 16px;
+}
+
+.card-padding-md {
+  padding: 20px 24px;
+}
+
+.card-padding-lg {
+  padding: 28px 32px;
+}
+
+.card-padding-xl {
+  padding: 36px 40px;
+}
+
+/* Shadow */
+.card-shadow-none {
+  box-shadow: none;
+}
+
+.card-shadow-sm {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.card-shadow-md {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.card-shadow-lg {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.card-shadow-xl {
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+/* Hover effects */
+.card-hover {
+  cursor: pointer;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+  border-color: var(--accent);
+}
+
+.card-hover::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), #1d4ed8);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.card-hover:hover::before {
+  transform: scaleX(1);
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .card {
+    border-radius: 12px;
+  }
+  
+  .card-padding-sm {
+    padding: 10px 14px;
+  }
+  
+  .card-padding-md {
+    padding: 16px 20px;
+  }
+  
+  .card-padding-lg {
+    padding: 22px 28px;
+  }
+  
+  .card-padding-xl {
+    padding: 28px 36px;
+  }
+}
+
+/* Loading state */
+.card-loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}

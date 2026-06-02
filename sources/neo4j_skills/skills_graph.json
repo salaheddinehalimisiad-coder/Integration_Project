@@ -1,0 +1,60 @@
+{
+  "nodes": [
+    {
+      "id": "EMP-001",
+      "label": "Employee",
+      "name": "Amine Brahimi"
+    },
+    {
+      "id": "EMP-003",
+      "label": "Employee",
+      "name": "Mohamed Khelifi"
+    },
+    {
+      "id": "CONS-01",
+      "label": "Employee",
+      "name": "Ryad Mahrez"
+    },
+    {
+      "id": "ML",
+      "label": "Skill",
+      "name": "Machine Learning"
+    },
+    {
+      "id": "K8S",
+      "label": "Skill",
+      "name": "Kubernetes"
+    },
+    {
+      "id": "SEC",
+      "label": "Skill",
+      "name": "Pentest"
+    }
+  ],
+  "edges": [
+    {
+      "source": "EMP-001",
+      "target": "ML",
+      "type": "KNOWS",
+      "weight": "Expert"
+    },
+    {
+      "source": "EMP-001",
+      "target": "K8S",
+      "type": "KNOWS",
+      "weight": "Senior"
+    },
+    {
+      "source": "EMP-003",
+      "target": "SEC",
+      "type": "KNOWS",
+      "weight": "Advanced"
+    },
+    {
+      "source": "CONS-01",
+      "target": "SEC",
+      "type": "KNOWS",
+      "weight": "Expert"
+    }
+  ]
+}
