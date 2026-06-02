@@ -1,11 +1,11 @@
-import { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
-import { GitBranch, AlertTriangle, BookOpen, ArrowUp, ArrowDown, Sliders, Save, Settings } from 'lucide-react';
+import { GitBranch, AlertTriangle, BookOpen, ArrowUp, ArrowDown, Save, Settings } from 'lucide-react';
 import { api } from '../lib/api';
 import { useApi } from '../hooks/useApi';
 import ConflictHeatmap from '../viz/ConflictHeatmap';
 import { SkeletonCard } from '../components/UI/Skeleton';
 import EmptyState from '../components/UI/EmptyState';
+import { useStore } from '../store/StoreContext';
 
 const TYPE_COLORS = {
   Nommage:     'var(--brand-500)',
@@ -21,27 +21,14 @@ const TYPE_COLORS = {
 export default function Conflicts() {
   const { toast } = useOutletContext();
   const { data, loading, error } = useApi(() => api.mappings(), []);
-  const [rules, setRules] = useState([
-    { id: 'highest_confidence', name: 'Confiance des sources', desc: 'Prioriser la valeur de la source ayant le plus grand indice de confiance.', active: true },
-    { id: 'transitive_closure', name: 'Fermeture transitive', desc: 'Résoudre les équivalences indirectes (si A~B et B~C alors A~C) par Union-Find.', active: true },
-    { id: 'soundex_match', name: 'Soundex & Phonétique', desc: 'Regrouper les noms avec une prononciation similaire en français/arabe.', active: true },
-    { id: 'value_merge', name: 'Concaténation des compétences', desc: 'Fusionner les listes de compétences (S6) plutôt que de les remplacer.', active: true },
-  ]);
+  const { resolutionRules: rules, toggleResolutionRule, moveResolutionRule } = useStore();
 
   const moveRule = (index, direction) => {
-    const nextRules = [...rules];
-    const targetIndex = index + direction;
-    if (targetIndex < 0 || targetIndex >= rules.length) return;
-    const temp = nextRules[index];
-    nextRules[index] = nextRules[targetIndex];
-    nextRules[targetIndex] = temp;
-    setRules(nextRules);
+    moveResolutionRule(index, direction);
   };
 
   const toggleRule = (index) => {
-    const nextRules = [...rules];
-    nextRules[index].active = !nextRules[index].active;
-    setRules(nextRules);
+    toggleResolutionRule(rules[index].id);
   };
 
   const saveRules = () => {

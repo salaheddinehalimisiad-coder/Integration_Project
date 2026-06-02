@@ -104,15 +104,19 @@ function AppContent() {
   );
 }
 
+import { StoreProvider } from './store/StoreContext';
+
 export default function App() {
   return (
     <ErrorBoundary>
       <HelmetProvider>
         <ThemeProvider>
           <ToastProvider>
-            <BrowserRouter>
-              <AppContent />
-            </BrowserRouter>
+            <StoreProvider>
+              <BrowserRouter>
+                <AppContent />
+              </BrowserRouter>
+            </StoreProvider>
           </ToastProvider>
         </ThemeProvider>
       </HelmetProvider>

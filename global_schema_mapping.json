@@ -1,0 +1,157 @@
+{
+  "project": "DataMediator Pro",
+  "version": "3.2.0",
+  "global_relations": {
+    "GlobalEmployee": {
+      "description": "Fédération des profils collaborateurs issus des sources RH, projets, évaluations et compétences.",
+      "mappings": [
+        {
+          "source": "S1",
+          "technology": "PostgreSQL",
+          "query_or_ref": "SELECT e.emp_id, e.matricule, e.first_name, e.last_name, e.email, e.birth_date, e.salary_eur, e.status, d.dept_id, d.dept_name, d.country FROM employees e JOIN departments d ON e.dept_id = d.dept_id",
+          "field_mappings": {
+            "employee_id": "S1:emp_id",
+            "matricule": "matricule",
+            "full_name": "CONCAT(first_name, ' ', last_name)",
+            "email": "email",
+            "birth_date": "birth_date",
+            "department_id": "S1:dept_id",
+            "department_name": "dept_name",
+            "country": "country",
+            "salary_usd": "salary_eur * EUR_TO_USD",
+            "status": "CASE WHEN status = 'ACTIVE' THEN 'ACTIVE' ELSE 'INACTIVE' END",
+            "source_confidence": 0.95
+          }
+        },
+        {
+          "source": "S2",
+          "technology": "MySQL",
+          "query_or_ref": "SELECT consultant_code, complete_name, mail, business_unit, active FROM consultants",
+          "field_mappings": {
+            "employee_id": "S2:consultant_code",
+            "matricule": "consultant_code",
+            "full_name": "complete_name",
+            "email": "mail",
+            "department_name": "business_unit",
+            "status": "CASE WHEN active = 1 THEN 'ACTIVE' ELSE 'INACTIVE' END",
+            "source_confidence": 0.80
+          }
+        },
+        {
+          "source": "S4",
+          "technology": "CSV File",
+          "query_or_ref": "employees_legacy.csv",
+          "field_mappings": {
+            "employee_id": "S4:legacy_id",
+            "full_name": "PARSED(nom_prenom)",
+            "email": "email",
+            "department_name": "dept",
+            "country": "pays",
+            "status": "'ACTIVE'",
+            "source_confidence": 0.60
+          }
+        },
+        {
+          "source": "S5",
+          "technology": "XML File",
+          "query_or_ref": "evaluations.xml (XPATH //Eval)",
+          "field_mappings": {
+            "employee_id": "S5:index",
+            "email": "@employeeMail",
+            "performance_score": "Score",
+            "source_confidence": 0.90
+          }
+        },
+        {
+          "source": "S6",
+          "technology": "JSON Graph",
+          "query_or_ref": "skills_graph.json",
+          "field_mappings": {
+            "employee_id": "S6:id",
+            "matricule": "id",
+            "skills": "KNOWS_edge.target",
+            "source_confidence": 0.85
+          }
+        }
+      ]
+    },
+    "GlobalDepartment": {
+      "description": "Fédération des départements et business units.",
+      "mappings": [
+        {
+          "source": "S1",
+          "technology": "PostgreSQL",
+          "query_or_ref": "SELECT * FROM departments",
+          "field_mappings": {
+            "department_id": "S1:dept_id",
+            "department_code": "dept_code",
+            "department_name": "dept_name",
+            "country": "country"
+          }
+        },
+        {
+          "source": "S2",
+          "technology": "MySQL",
+          "query_or_ref": "SELECT DISTINCT business_unit FROM consultants",
+          "field_mappings": {
+            "department_id": "S2:business_unit",
+            "department_code": "business_unit",
+            "department_name": "business_unit",
+            "country": "NULL"
+          }
+        }
+      ]
+    },
+    "GlobalProject": {
+      "description": "Liste consolidée des projets.",
+      "mappings": [
+        {
+          "source": "S2",
+          "technology": "MySQL",
+          "query_or_ref": "SELECT * FROM projects",
+          "field_mappings": {
+            "project_id": "S2:project_code",
+            "project_name": "label",
+            "client_name": "client_name",
+            "status": "state",
+            "start_date": "start_dt",
+            "end_date": "end_dt"
+          }
+        }
+      ]
+    },
+    "GlobalAssignment": {
+      "description": "Affectations des collaborateurs sur les projets.",
+      "mappings": [
+        {
+          "source": "S2",
+          "technology": "MySQL",
+          "query_or_ref": "SELECT * FROM assignments",
+          "field_mappings": {
+            "employee_id": "RECONCILED(consultant_code)",
+            "project_id": "S2:project_code",
+            "role": "job_title",
+            "allocation_rate": "allocation_percent / 100"
+          }
+        }
+      ]
+    },
+    "GlobalPayroll": {
+      "description": "Contrats et détails de paie sensibles.",
+      "mappings": [
+        {
+          "source": "S3",
+          "technology": "MongoDB",
+          "query_or_ref": "db.payroll.find()",
+          "field_mappings": {
+            "employee_id": "RECONCILED(employeeMatricule)",
+            "salary_usd": "monthlySalaryDzd * DZD_TO_USD",
+            "bonus_usd": "bonusDzd * DZD_TO_USD",
+            "risk_level": "riskLevel",
+            "national_id": "nationalId"
+          }
+        }
+      ]
+    }
+  }
+}
