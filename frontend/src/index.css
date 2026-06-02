@@ -1,4 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
 @import "tailwindcss";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@import "./styles/design-system.css";
+@import "./styles/premium.css";
 
 @theme {
   --color-primary: #4f46e5;
@@ -16,14 +23,6 @@
 }
 
 :root {
-  /* ── Surfaces ── */
-  --bg-void:     #060810;
-  --bg-base:     #0a0d1a;
-  --bg-surface:  #111525;
-  --bg-elevated: #181c2f;
-  --bg-higher:   #1f2440;
-  --bg-overlay:  #263055;
-
   /* ── Primary Cobalt ── */
   --blue-600: #2952d8;
   --blue-500: #3d6ae8;
@@ -47,21 +46,6 @@
   /* ── AI / Model accent ── */
   --purple-500: #8b5cf6;
   --purple-400: #a78bfa;
-
-  /* ── Text ── */
-  --text-primary:   #dfe4f2;
-  --text-secondary: #8a93b8;
-  --text-muted:     #4a5170;
-  --text-dim:       #2e3460;
-
-  /* ── Borders ── */
-  --border-hair:    rgba(255,255,255,0.03);
-  --border-subtle:  rgba(255,255,255,0.05);
-  --border-soft:    rgba(255,255,255,0.08);
-  --border-default: rgba(255,255,255,0.11);
-  --border-bright:  rgba(255,255,255,0.18);
-  --border-focus:   rgba(77,126,247,0.55);
-  --border-focus-ai:rgba(139,92,246,0.55);
 
   /* ── Gradients ── */
   --grad-primary: linear-gradient(135deg, #3d6ae8 0%, #0ea5e9 100%);
@@ -140,32 +124,8 @@
   box-shadow: var(--shadow-lg);
 }
 
-.light-mode {
-  --bg-void:      #f0f2f9;
-  --bg-base:      #f6f8ff;
-  --bg-surface:   #ffffff;
-  --bg-elevated:  #eef1fa;
-  --bg-higher:    #e3e8f5;
-  --border-hair:  rgba(0,0,0,0.04);
-  --border-subtle:rgba(0,0,0,0.06);
-  --border-soft:  rgba(0,0,0,0.09);
-  --border-default:rgba(0,0,0,0.13);
-  --text-primary: #0f172a;
-  --text-secondary:#475569;
-  --text-muted:   #94a3b8;
-  --text-dim:     #cbd5e1;
-}
-
 .light-mode .card-premium {
   background: var(--bg-surface);
   border-color: var(--border-subtle);
 }
-.light-mode .text-slate-100,
-.light-mode .text-slate-200,
-.light-mode .text-slate-300,
-.light-mode .text-white { color: #0f172a !important; }
-.light-mode .text-slate-400 { color: #475569 !important; }
-.light-mode .text-slate-500 { color: #64748b !important; }
-.light-mode .text-slate-600 { color: #475569 !important; }
-.light-mode .text-slate-700 { color: #334155 !important; }
 

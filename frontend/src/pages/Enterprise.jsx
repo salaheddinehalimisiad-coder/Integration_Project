@@ -37,7 +37,6 @@ import {
 } from 'recharts';
 import { useTheme } from '../components/Theme/ThemeProvider';
 import AnimatedIcon from '../components/UI/AnimatedIcon';
-import '../styles/design-system.css';
 import './Enterprise.css';
 
 const API = 'http://localhost:5001';

@@ -4,12 +4,10 @@
    Single source of truth for tokens, primitives & components
    ========================================================= */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
-
 /* ---------- 1. TOKENS (Light theme = default) ---------- */
 :root {
   /* ----- Brand palette ----- */
-  --brand-5:  #eef2ff;
+  --brand-50:  #eef2ff;
   --brand-100: #e0e7ff;
   --brand-200: #c7d2fe;
   --brand-300: #a5b4fc;
@@ -37,7 +35,7 @@
   --neutral-200: #e2e8f0;
   --neutral-300: #cbd5e1;
   --neutral-400: #94a3b8;
-  --neutral-505: #64748b;
+  --neutral-550: #64748b;
   --neutral-600: #475569;
   --neutral-700: #334155;
   --neutral-800: #1e293b;
@@ -54,7 +52,7 @@
 
   --text-primary:   var(--neutral-900);
   --text-secondary: var(--neutral-600);
-  --text-tertiary:  var(--neutral-505);
+  --text-tertiary:  var(--neutral-550);
   --text-disabled:  var(--neutral-400);
   --text-inverse:   var(--neutral-0);
   --text-brand:     var(--brand-600);
@@ -66,7 +64,7 @@
 
   --accent:         var(--brand-600);
   --accent-hover:   var(--brand-700);
-  --accent-soft:    var(--brand-5);
+  --accent-soft:    var(--brand-50);
   --accent-soft-2:  var(--brand-100);
 
   /* ----- Radii ----- */
@@ -137,7 +135,7 @@
 
   /* ----- Landing page tokens (Login.jsx) ----- */
   --grad-primary:   linear-gradient(135deg, #4f46e5 0%, #3d6ae8 50%, #06b6d4 100%);
-  --text-muted:     var(--neutral-505);
+  --text-muted:     var(--neutral-550);
   --text-dim:       var(--neutral-400);
   --border-soft:    rgba(99, 102, 241, 0.15);
 }
@@ -178,7 +176,7 @@
   /* ----- Landing page tokens (dark) ----- */
   --grad-primary:   linear-gradient(135deg, #6366f1 0%, #4f8ef5 50%, #22d3ee 100%);
   --text-muted:     var(--neutral-400);
-  --text-dim:       var(--neutral-505);
+  --text-dim:       var(--neutral-550);
   --border-soft:    rgba(99, 102, 241, 0.2);
 }
 

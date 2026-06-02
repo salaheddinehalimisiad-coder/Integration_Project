@@ -266,7 +266,7 @@ export default function Login({ onLogin }) {
             <motion.div variants={scaleIn} className="w-full max-w-5xl relative">
               <div className="rounded-3xl border p-1 shadow-2xl" style={{ borderColor: 'var(--border-default)', background: 'var(--bg-surface-2)', boxShadow: 'var(--shadow-lg)' }}>
                 <div className="rounded-2xl p-6 md:p-10 relative overflow-hidden" style={{ background: 'var(--bg-surface)' }}>
-                  <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr_auto_1fr] gap-4 items-center">
+                  <div className="flex flex-col lg:flex-row items-center justify-between gap-4 w-full">
                     {[
                       { icon: Database, label: '6 Sources Physiques', color: 'text-emerald-500', bg: 'rgba(16,185,129,0.08)', border: 'rgba(16,185,129,0.2)' },
                       { icon: BrainCircuit, label: 'Mapping GAV / LAV', color: 'text-indigo-500', bg: 'rgba(99,102,241,0.08)', border: 'rgba(99,102,241,0.2)' },
@@ -277,14 +277,14 @@ export default function Login({ onLogin }) {
                       <React.Fragment key={i}>
                         <motion.div 
                           whileHover={{ y: -4 }} 
-                          className="flex flex-col items-center gap-3 p-5 rounded-2xl border transition-all"
+                          className="flex flex-col items-center justify-center gap-3 p-5 rounded-2xl border transition-all flex-1 min-w-[130px]"
                           style={{ backgroundColor: step.bg, borderColor: step.border }}
                         >
                           <step.icon size={28} className={step.color} />
                           <span className="text-[10px] font-bold uppercase tracking-wider text-center" style={{ color: 'var(--text-secondary)' }}>{step.label}</span>
                         </motion.div>
                         {i < 4 && (
-                          <div className="hidden md:flex items-center justify-center">
+                          <div className="hidden lg:flex items-center justify-center shrink-0">
                             <motion.div animate={{ x: [0, 6, 0] }} transition={{ repeat: Infinity, duration: 1.5, delay: i * 0.2 }}>
                               <ArrowRight size={18} style={{ color: 'var(--text-muted)' }} />
                             </motion.div>
