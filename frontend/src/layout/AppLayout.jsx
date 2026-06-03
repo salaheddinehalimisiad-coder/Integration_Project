@@ -92,10 +92,12 @@ export default function AppLayout({ user, onLogout, mode, setMode }) {
   return (
     <div className="al-shell">
       <aside className={`al-sidebar ${sidebarOpen ? 'al-sidebar--open' : ''}`}>
-        <div className="ds-brand">
-          <div className="ds-brand__mark"><Database size={20} /></div>
-          <div>
-            <div className="ds-brand__name">DataMediator</div>
+        <div className="ds-brand" style={{ gap: '4px' }}>
+          <div className="flex items-center justify-center" style={{ marginLeft: '-16px' }}>
+            <img src="/logo.png" alt="Logo" className="object-contain" style={{ width: '120px', height: '80px' }} />
+          </div>
+          <div style={{ marginLeft: '-10px' }}>
+            <div className="ds-brand__name" style={{ fontSize: '18px' }}>DataMediator</div>
             <div className="ds-brand__tag">Mediation GAV / LAV</div>
           </div>
         </div>

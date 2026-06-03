@@ -418,8 +418,8 @@
   border: 1px solid var(--border-subtle);
 }
 
-/* ─────── 11. Gradient text ─────── */
-.gradient-text {
+/* ─────── 11. Gradient text (brand variant) ─────── */
+.gradient-text-brand {
   background: var(--grad-brand);
   -webkit-background-clip: text;
   background-clip: text;

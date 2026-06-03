@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import autoTable from 'jspdf-autotable';
 import CodeMirror from '@uiw/react-codemirror';
 import { sql as sqlLang } from '@codemirror/lang-sql';
 import { oneDark } from '@codemirror/theme-one-dark';
@@ -16,21 +16,24 @@ import { Skeleton, SkeletonTable } from '../components/UI/Skeleton';
 import EmptyState from '../components/UI/EmptyState';
 
 const DEMO_QUERIES = [
-  { label: 'Employés actifs', sql: "SELECT full_name, email, department_name, country FROM GlobalEmployee WHERE status = 'ACTIVE';" },
-  { label: 'Jointure employés × projets',
+  { label: 'Employés actifs (Filtre simple)', sql: "SELECT full_name, email, department_name, country FROM GlobalEmployee WHERE status = 'ACTIVE';" },
+  { label: 'Recherche par compétence (LIKE)', sql: "SELECT full_name, email, skills FROM GlobalEmployee WHERE skills LIKE '%Python%';" },
+  { label: 'Croisement Employés × Projets',
     sql: `SELECT e.full_name, p.project_name, a.role, a.allocation_rate
 FROM GlobalEmployee e
 JOIN GlobalAssignment a ON e.employee_id = a.employee_id
 JOIN GlobalProject p ON a.project_id = p.project_id
 WHERE p.status = 'ACTIVE';` },
-  { label: 'Finance (RBAC)',
+  { label: 'Salaires & Accès restreint (RBAC)',
     sql: `SELECT e.full_name, pay.salary_usd, pay.bonus_usd, pay.risk_level
 FROM GlobalEmployee e
 JOIN GlobalPayroll pay ON e.employee_id = pay.employee_id
 WHERE pay.salary_usd > 2000;` },
-  { label: 'Agrégation', sql: "SELECT department_name, COUNT(*) AS employee_count FROM GlobalEmployee WHERE status = 'ACTIVE' GROUP BY department_name;" },
-  { label: 'Vérification ajout source', sql: "SELECT full_name, email, department_name FROM GlobalEmployee WHERE department_name = 'AI Lab';" },
-  { label: 'XML + Graphe', sql: "SELECT full_name, performance_score, skills FROM GlobalEmployee WHERE status = 'ACTIVE';" },
+  { label: 'Agrégation par département', sql: "SELECT department_name, COUNT(*) AS employee_count FROM GlobalEmployee WHERE status = 'ACTIVE' GROUP BY department_name;" },
+  { label: 'Budget total par niveau de risque', sql: "SELECT risk_level, SUM(salary_usd) AS total_salary FROM GlobalPayroll GROUP BY risk_level;" },
+  { label: 'Top Performers (XML/Graph)', sql: "SELECT full_name, performance_score, skills FROM GlobalEmployee WHERE performance_score > 90;" },
+  { label: 'Vérification Temps Réel (AI Lab)', sql: "SELECT full_name, email, department_name FROM GlobalEmployee WHERE department_name = 'AI Lab';" },
+  { label: 'Filtrage multi-critères (Pays + Statut)', sql: "SELECT full_name, country, department_name FROM GlobalEmployee WHERE country = 'DZ' AND status = 'ACTIVE';" },
 ];
 
 export default function Console() {
@@ -107,25 +110,109 @@ export default function Console() {
     }
   };
 
-  const exportPDF = () => {
+  const getBase64Image = async (url) => {
+    try {
+      const res = await fetch(url);
+      const blob = await res.blob();
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.readAsDataURL(blob);
+      });
+    } catch (err) {
+      return null;
+    }
+  };
+
+  const exportPDF = async () => {
     if (!result) return;
     const doc = new jsPDF();
-    doc.setFontSize(18); doc.text('Rapport de Médiation — DataMediator', 14, 18);
+    
+    const logoData = await getBase64Image('/logo.png');
+
+    // Header styling
+    doc.setFillColor(15, 23, 42); // slate-900
+    doc.rect(0, 0, 210, 40, 'F');
+    
+    if (logoData) {
+      doc.addImage(logoData, 'PNG', 14, 8, 24, 24);
+    }
+    
+    // Text inside header
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(22);
+    doc.setFont("helvetica", "bold");
+    doc.text('DataMediator Pro', logoData ? 42 : 14, 22);
+    
     doc.setFontSize(10);
-    doc.text(`Date : ${new Date().toLocaleString()}`, 14, 28);
-    doc.text(`Stratégie : ${result.plan?.strategy || mode}`, 14, 34);
-    doc.text(`Temps : ${result.execution_ms} ms · Lignes : ${result.row_count}`, 14, 40);
-    doc.text(`Réconciliations : ${result.reconciliation?.length || 0}`, 14, 46);
-    doc.autoTable({
-      startY: 54,
-      head: [result.columns],
-      body: result.rows.map(r => result.columns.map(c => String(r[c] ?? ''))),
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(148, 163, 184); // slate-400
+    doc.text("Rapport d'Exécution de Médiation GAV / LAV", logoData ? 42 : 14, 28);
+    
+    // Meta Info Background
+    doc.setFillColor(248, 250, 252); // slate-50
+    doc.rect(14, 48, 182, 35, 'F');
+    doc.setDrawColor(226, 232, 240); // slate-200
+    doc.rect(14, 48, 182, 35, 'S');
+
+    // Meta Info Content
+    doc.setTextColor(15, 23, 42); // slate-900
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.text("Détails de l'exécution", 20, 56);
+
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(71, 85, 105); // slate-600
+    doc.text(`Date de génération :`, 20, 64);
+    doc.text(`Stratégie utilisée :`, 20, 70);
+    doc.text(`Temps d'exécution :`, 20, 76);
+
+    doc.setTextColor(15, 23, 42); // slate-900
+    doc.setFont("helvetica", "bold");
+    doc.text(`${new Date().toLocaleString()}`, 60, 64);
+    doc.text(`${result.plan?.strategy || mode}`, 60, 70);
+    doc.text(`${result.execution_ms} ms`, 60, 76);
+
+    // Stats
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(71, 85, 105);
+    doc.text(`Lignes retournées :`, 120, 64);
+    doc.text(`Conflits résolus :`, 120, 70);
+
+    doc.setTextColor(15, 23, 42);
+    doc.setFont("helvetica", "bold");
+    doc.text(`${result.row_count}`, 155, 64);
+    doc.text(`${result.reconciliation?.length || 0}`, 155, 70);
+
+    // Table
+    autoTable(doc, {
+      startY: 90,
+      head: [result.columns || []],
+      body: (result.rows || []).map(r => (result.columns || []).map(c => String(r[c] ?? ''))),
       theme: 'grid',
-      headStyles: { fillColor: [79, 70, 229] },
-      styles: { fontSize: 8 },
+      headStyles: { fillColor: [99, 102, 241], textColor: 255, fontStyle: 'bold', halign: 'left' },
+      bodyStyles: { textColor: [51, 65, 85] },
+      alternateRowStyles: { fillColor: [248, 250, 252] },
+      styles: { fontSize: 9, cellPadding: 4, lineColor: [226, 232, 240], lineWidth: 0.1 },
+      margin: { left: 14, right: 14 },
     });
-    doc.save(`DataMediator_${Date.now()}.pdf`);
-    toast?.info?.('PDF généré', 'Téléchargement lancé');
+
+    // Footer
+    const pageCount = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFontSize(8);
+      doc.setTextColor(148, 163, 184); // slate-400
+      doc.text(
+        `DataMediator Pro — Généré automatiquement · Page ${i} sur ${pageCount}`,
+        14,
+        doc.internal.pageSize.height - 10
+      );
+    }
+
+    doc.save(`DataMediator_Rapport_${Date.now()}.pdf`);
+    toast?.success?.('PDF professionnel généré', 'Le téléchargement a commencé');
   };
 
   return (
@@ -331,7 +418,7 @@ function ExecPanel({ label, color, result, loading }) {
       {/* Flux */}
       {!loading && result && (
         <div className="ds-flow" style={{ marginBottom: 12 }}>
-          <div className="ds-flow__node ds-flow__node--brand" style={{ borderColor: color, color }}>
+          <div className="ds-flow__node ds-flow__node--brand" style={{ backgroundColor: color, borderColor: color, color: 'white' }}>
             Requête SQL globale
           </div>
           <div className="ds-flow__arrow"><ArrowRight size={16} style={{ transform: 'rotate(90deg)' }} /></div>
@@ -379,19 +466,19 @@ function ExecPanel({ label, color, result, loading }) {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6, textAlign: 'center', marginBottom: 8 }}>
             <div>
               <div style={{ fontSize: 9, color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>Buckets</div>
-              <strong style={{ color: 'var(--danger-500)' }}>{minicon.comparison.bucket_combinations}</strong>
+              <strong style={{ color: 'var(--danger-500)' }}>{minicon.comparison?.bucket_combinations ?? '?'}</strong>
             </div>
             <div>
               <div style={{ fontSize: 9, color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>MCDs</div>
-              <strong style={{ color: 'var(--info-500)' }}>{minicon.comparison.minicon_mcds}</strong>
+              <strong style={{ color: 'var(--info-500)' }}>{minicon.comparison?.minicon_mcds ?? '?'}</strong>
             </div>
             <div>
               <div style={{ fontSize: 9, color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>Réécritures</div>
-              <strong style={{ color: 'var(--success-500)' }}>{minicon.comparison.minicon_rewritings}</strong>
+              <strong style={{ color: 'var(--success-500)' }}>{minicon.comparison?.minicon_rewritings ?? '?'}</strong>
             </div>
           </div>
           <div style={{ color: 'var(--text-tertiary)', lineHeight: 1.5 }}>
-            {minicon.mcds.slice(0, 2).map((m, idx) => (
+            {minicon.mcds?.slice(0, 2).map((m, idx) => (
               <div key={idx}>• Vue <strong style={{ color }}>{m.view}</strong> → {JSON.stringify(m.covers_subgoals)}</div>
             ))}
           </div>
@@ -549,22 +636,22 @@ function PlanPanel({ result, mode }) {
           }}>
             <div>
               <div style={{ fontSize: 10, color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>Combinaisons Bucket</div>
-              <strong style={{ fontSize: 18, color: 'var(--danger-500)' }}>{minicon.comparison.bucket_combinations}</strong>
+              <strong style={{ fontSize: 18, color: 'var(--danger-500)' }}>{minicon.comparison?.bucket_combinations ?? '?'}</strong>
             </div>
             <div>
               <div style={{ fontSize: 10, color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>MCDs construits</div>
-              <strong style={{ fontSize: 18, color: 'var(--info-500)' }}>{minicon.comparison.minicon_mcds}</strong>
+              <strong style={{ fontSize: 18, color: 'var(--info-500)' }}>{minicon.comparison?.minicon_mcds ?? '?'}</strong>
             </div>
             <div>
               <div style={{ fontSize: 10, color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>Réécritures minimales</div>
-              <strong style={{ fontSize: 18, color: 'var(--success-500)' }}>{minicon.comparison.minicon_rewritings}</strong>
+              <strong style={{ fontSize: 18, color: 'var(--success-500)' }}>{minicon.comparison?.minicon_rewritings ?? '?'}</strong>
             </div>
           </div>
 
           <div>
             <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 6 }}>MiniCon Descriptions (MCD) générées :</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6, maxHeight: 150, overflowY: 'auto' }}>
-              {minicon.mcds.map((m, idx) => (
+              {minicon.mcds?.map((m, idx) => (
                 <div key={idx} style={{
                   fontSize: 11, background: 'var(--bg-surface-2)',
                   border: '1px solid var(--border-subtle)', padding: '6px 10px',

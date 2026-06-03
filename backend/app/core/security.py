@@ -15,7 +15,7 @@ from typing import Any
 from fastapi import HTTPException, Request
 import jwt as _jwt
 
-from config import settings
+from app.core.config import settings
 
 
 # ────────────────────────────────────────────────────────────────────

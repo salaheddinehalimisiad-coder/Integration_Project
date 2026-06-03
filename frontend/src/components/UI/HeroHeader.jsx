@@ -36,7 +36,7 @@ export default function HeroHeader({ eyebrow, title, accent, subtitle, pills = [
       transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
     >
       <div className="hero__content">
-        {eyebrow && <div className="hero__eyebrow">{eyebrow}</div>}
+        {/* Eyebrow removed globally as requested */}
         {title && <h1 className="hero__title">{renderTitle()}</h1>}
         {subtitle && <p className="hero__subtitle">{subtitle}</p>}
         {pills.length > 0 && (

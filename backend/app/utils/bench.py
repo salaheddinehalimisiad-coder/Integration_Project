@@ -23,7 +23,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 
-from enterprise_mediator import QueryEngine, ensure_sources, USERS
+from app.services.enterprise_mediator import QueryEngine, ensure_sources, USERS
 
 
 REFERENCE_QUERIES = [

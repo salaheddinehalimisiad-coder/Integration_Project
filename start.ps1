@@ -3,7 +3,8 @@
 # Version robuste : verifie l'import Python, teste le port,
 # diagnostique les erreurs au lieu de les masquer.
 # ============================================================
-$ErrorActionPreference = "Stop"
+$ErrorActionPreference = "Continue"
+
 
 function Section($t) { Write-Host ""; Write-Host "==> $t" -ForegroundColor Cyan }
 function Info($t)    { Write-Host "    $t" -ForegroundColor Gray }
@@ -77,7 +78,7 @@ if ($LASTEXITCODE -ne 0) { Err "Echec generation sources"; exit 1 }
 # ----- VALIDATION : main.py s'importe sans erreur ? -----
 Section "Validation du backend (import main.py)"
 Push-Location $ROOT
-python -c "import main; print(f'Endpoints: {len([r for r in main.app.routes if hasattr(r, \"path\")])}')" 2>&1
+python -c "import main; print('Endpoints:', len([r for r in main.app.routes if hasattr(r, 'path')]))" 2>&1
 $ok = ($LASTEXITCODE -eq 0)
 Pop-Location
 if (-not $ok) {

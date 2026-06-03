@@ -15,7 +15,7 @@ from strawberry.fastapi import GraphQLRouter
 from datetime import datetime
 import logging
 
-from enterprise_mediator import (
+from app.services.enterprise_mediator import (
     fetch_global_table, 
     QueryEngine, 
     GLOBAL_SCHEMA, 

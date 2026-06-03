@@ -10,9 +10,9 @@ from fastapi import FastAPI, Header, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from config import settings, ensure_log_directory
-from security import login_limiter, jwt_validator, get_client_ip
-from enterprise_mediator import (
+from app.core.config import settings, ensure_log_directory
+from app.core.security import login_limiter, jwt_validator, get_client_ip
+from app.services.enterprise_mediator import (
     CONFLICT_RULES,
     GAV_RULES,
     GLOBAL_SCHEMA,
@@ -41,7 +41,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-import audit_log
+import app.services.audit_log as audit_log
 
 
 @asynccontextmanager

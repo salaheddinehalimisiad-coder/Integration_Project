@@ -83,13 +83,7 @@ export default function Loading({ onComplete }) {
           >
             {/* Logo icon */}
             <div className="relative mb-5">
-              <div className="w-16 h-16 rounded-2xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center">
-                <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-8 h-8">
-                  <path d="M16 3L27 9L16 15L5 9L16 3Z" fill="#6366f1"/>
-                  <path d="M16 10L27 16L16 22L5 16L16 10Z" fill="#ec4899"/>
-                  <path d="M16 17L27 23L16 29L5 23L16 17Z" fill="#06b6d4"/>
-                </svg>
-              </div>
+              <img src="/logo.png" alt="Logo" className="w-16 h-16 object-contain rounded-2xl" />
               {/* Pulse rings */}
               <div className="absolute inset-0 rounded-2xl border border-indigo-500/20 animate-ping opacity-30" />
             </div>

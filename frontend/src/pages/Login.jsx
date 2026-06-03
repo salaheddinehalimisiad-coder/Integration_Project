@@ -62,12 +62,12 @@ function useCounter(end, duration = 1200) {
 }
 
 const SOURCES = [
-  { icon: Database, label: 'PostgreSQL', kind: 'SQL View', color: '#336791', bg: 'rgba(51,103,145,0.08)', border: 'rgba(51,103,145,0.25)' },
-  { icon: Server,   label: 'MySQL',      kind: 'SQL View', color: '#f29111', bg: 'rgba(242,145,17,0.08)', border: 'rgba(242,145,17,0.25)' },
-  { icon: FileJson, label: 'MongoDB',    kind: 'NoSQL Collection', color: '#47a248', bg: 'rgba(71,162,72,0.08)', border: 'rgba(71,162,72,0.25)' },
-  { icon: Network,  label: 'Neo4j Graph', kind: 'JSON Graph', color: '#008cc1', bg: 'rgba(0,140,193,0.08)', border: 'rgba(0,140,193,0.25)' },
-  { icon: Code2,    label: 'XML API',    kind: 'Structured API', color: '#7c3aed', bg: 'rgba(124,58,237,0.08)', border: 'rgba(124,58,237,0.25)' },
-  { icon: Table,    label: 'CSV File',   kind: 'Flat Database', color: '#64748b', bg: 'rgba(100,116,139,0.08)', border: 'rgba(100,116,139,0.25)' }
+  { icon: Database, label: 'PostgreSQL', kind: 'SQL View', color: '#336791', bg: 'rgba(51,103,145,0.08)', border: 'rgba(51,103,145,0.25)', image: '/images/postgresql.png' },
+  { icon: Server,   label: 'MySQL',      kind: 'SQL View', color: '#f29111', bg: 'rgba(242,145,17,0.08)', border: 'rgba(242,145,17,0.25)', image: '/images/mysql.png' },
+  { icon: FileJson, label: 'MongoDB',    kind: 'NoSQL Collection', color: '#47a248', bg: 'rgba(71,162,72,0.08)', border: 'rgba(71,162,72,0.25)', image: '/images/mongodb.png' },
+  { icon: Network,  label: 'Neo4j Graph', kind: 'JSON Graph', color: '#008cc1', bg: 'rgba(0,140,193,0.08)', border: 'rgba(0,140,193,0.25)', image: '/images/neo4j.png' },
+  { icon: Code2,    label: 'XML API',    kind: 'Structured API', color: '#7c3aed', bg: 'rgba(124,58,237,0.08)', border: 'rgba(124,58,237,0.25)', image: '/images/restapi.png' },
+  { icon: Table,    label: 'CSV File',   kind: 'Flat Database', color: '#64748b', bg: 'rgba(100,116,139,0.08)', border: 'rgba(100,116,139,0.25)', image: '/images/csv.png' }
 ];
 
 const STEPS = [
@@ -130,7 +130,7 @@ const COMPONENTS = {
 
 export default function Login({ onLogin }) {
   const [activeTab, setActiveTab] = useState('decomposer');
-  const [isPaused, setIsPaused] = useState(false);
+  const [progress, setProgress] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -138,16 +138,35 @@ export default function Login({ onLogin }) {
   const { theme, toggleTheme, isDark } = useTheme();
 
   useEffect(() => {
-    if (isPaused) return;
-    const keys = Object.keys(COMPONENTS);
-    const interval = setInterval(() => {
-      setActiveTab(prev => {
-        const currentIndex = keys.indexOf(prev);
-        return keys[(currentIndex + 1) % keys.length];
-      });
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [isPaused]);
+    let start = performance.now();
+    let animationFrameId;
+
+    const animate = (time) => {
+      const delta = time - start;
+      const totalDuration = 5000;
+
+      if (delta >= totalDuration) {
+        setProgress(0);
+        setActiveTab(curr => {
+          const keys = Object.keys(COMPONENTS);
+          const idx = keys.indexOf(curr);
+          return keys[(idx + 1) % keys.length];
+        });
+      } else {
+        setProgress((delta / totalDuration) * 100);
+        animationFrameId = requestAnimationFrame(animate);
+      }
+    };
+
+    animationFrameId = requestAnimationFrame(animate);
+
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [activeTab]);
+
+  const handleTabClick = (key) => {
+    setActiveTab(key);
+    setProgress(0);
+  };
 
   const scrollToSection = (e, id) => {
     e.preventDefault();
@@ -179,19 +198,9 @@ export default function Login({ onLogin }) {
 
         {/* ── Navigation ── */}
         <nav className="fixed top-0 inset-x-0 z-[100] w-full border-b backdrop-blur-2xl transition-colors duration-500" style={{ background: isDark ? 'rgba(10,13,26,0.85)' : 'rgba(246,248,255,0.85)', borderColor: 'var(--border-subtle)' }}>
-          <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <div className="flex items-center gap-3 cursor-pointer" onClick={() => setShowAuthModal(true)}>
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center border" style={{ background: 'var(--bg-surface-2)', borderColor: 'var(--border-default)' }}>
-                <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6">
-                  <path d="M16 3L27 9L16 15L5 9L16 3Z" fill="#6366f1"/>
-                  <path d="M16 10L27 16L16 22L5 16L16 10Z" fill="#ec4899"/>
-                  <path d="M16 17L27 23L16 29L5 23L16 17Z" fill="#06b6d4"/>
-                </svg>
-              </div>
-              <div>
-                <span className="font-extrabold text-lg tracking-tight" style={{ color: 'var(--text-primary)' }}>DataMediator</span>
-                <span className="block text-[8px] text-indigo-400 font-bold uppercase tracking-widest leading-none">PRO</span>
-              </div>
+          <div className="max-w-7xl mx-auto px-6 h-28 flex items-center justify-between">
+            <div className="flex items-center cursor-pointer" onClick={() => setShowAuthModal(true)}>
+              <img src="/logo.png" alt="DataMediator Pro" className="h-24 w-auto object-contain" />
             </div>
 
             <div className="hidden lg:flex items-center gap-8 text-sm font-semibold" style={{ color: 'var(--text-secondary)' }}>
@@ -205,9 +214,8 @@ export default function Login({ onLogin }) {
               <button onClick={toggleTheme} className="p-2 rounded-xl border transition-all duration-300 hover:scale-105" style={{ background: 'var(--bg-surface)', borderColor: 'var(--border-default)', color: isDark ? '#fbbf24' : '#6366f1' }} title={isDark ? 'Mode Clair' : 'Mode Sombre'}>
                 {isDark ? <Sun size={18} /> : <Moon size={18} />}
               </button>
-              <button onClick={() => setShowAuthModal(true)} className="hidden sm:block text-sm font-semibold hover:text-indigo-400 transition-colors cursor-pointer" style={{ color: 'var(--text-secondary)' }}>Se connecter</button>
               <button onClick={() => setShowAuthModal(true)} className="text-sm font-bold text-white px-5 py-2.5 rounded-full hover:opacity-90 transition-all active:scale-95 shadow-md cursor-pointer" style={{ background: 'var(--grad-primary)', boxShadow: '0 2px 12px rgba(61,106,232,0.25)' }}>
-                Accéder au Dashboard
+                Se connecter
               </button>
               <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="lg:hidden p-2 rounded-lg" style={{ color: 'var(--text-secondary)' }}>
                 {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
@@ -234,13 +242,7 @@ export default function Login({ onLogin }) {
         <main className="relative z-10 w-full max-w-7xl mx-auto px-6 pt-36 pb-24 md:pt-44 md:pb-32 flex flex-col items-center">
           <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="w-full flex flex-col items-center text-center">
             
-            <motion.div 
-              variants={fadeInUp} 
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border text-xs font-semibold uppercase tracking-wider mb-6 backdrop-blur-md text-indigo-600 dark:text-indigo-300"
-              style={{ background: 'var(--bg-surface-2)', borderColor: 'var(--border-default)' }}
-            >
-              <Sparkles size={12} className="text-indigo-400" /> PROJET ACADÉMIQUE — MASTER INTÉGRATION DE DONNÉES
-            </motion.div>
+            {/* Eyebrow removed */}
 
             <motion.h1 variants={fadeInUp} className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.08] mb-6 max-w-5xl" style={{ color: 'var(--text-primary)' }}>
               Une seule requête virtuelle.<br />
@@ -321,54 +323,94 @@ export default function Login({ onLogin }) {
         </section>
 
         {/* ── PLATFORM COMPONENT SLIDESHOW ── */}
-        <section id="platform" className="relative z-10 w-full py-24 md:py-32 border-b" style={{ borderColor: 'var(--border-subtle)', scrollMarginTop: '80px' }}>
-          <div className="max-w-7xl mx-auto px-6">
-            <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center mb-16">
-              <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight mb-5" style={{ color: 'var(--text-primary)' }}>Moteur de médiation DataMediator Pro</h2>
-              <p className="text-lg max-w-2xl mx-auto leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                DataMediator intègre 5 composants technologiques clés pour réécrire, exécuter et sécuriser vos requêtes virtuelles.
+        <section id="platform" className="relative z-10 w-full py-28 md:py-36 border-b" style={{ borderColor: 'var(--border-subtle)', scrollMarginTop: '80px' }}>
+          {/* Section ambient glow */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            <div className="absolute top-[10%] left-[20%] w-[40%] h-[40%] rounded-full blur-[200px]" style={{ background: activeTab === 'decomposer' ? 'rgba(16,185,129,0.06)' : activeTab === 'rewriter' ? 'rgba(99,102,241,0.06)' : activeTab === 'executor' ? 'rgba(6,182,212,0.06)' : activeTab === 'resolver' ? 'rgba(168,85,247,0.06)' : 'rgba(244,63,94,0.06)', transition: 'background 1s ease' }}></div>
+            <div className="absolute bottom-[5%] right-[15%] w-[30%] h-[30%] rounded-full blur-[160px]" style={{ background: activeTab === 'decomposer' ? 'rgba(16,185,129,0.04)' : activeTab === 'rewriter' ? 'rgba(99,102,241,0.04)' : activeTab === 'executor' ? 'rgba(6,182,212,0.04)' : activeTab === 'resolver' ? 'rgba(168,85,247,0.04)' : 'rgba(244,63,94,0.04)', transition: 'background 1s ease' }}></div>
+          </div>
+
+          <div className="max-w-7xl mx-auto px-6 relative">
+            <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center mb-20">
+              {/* Eyebrow removed */}
+              <h2 className="text-3xl md:text-5xl lg:text-[3.5rem] font-extrabold tracking-tight mb-6 leading-[1.1]" style={{ color: 'var(--text-primary)' }}>
+                Moteur de médiation{' '}
+                <span className="gradient-text">DataMediator Pro</span>
+              </h2>
+              <p className="text-base md:text-lg max-w-2xl mx-auto leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                5 composants technologiques orchestrés pour réécrire, exécuter et sécuriser vos requêtes virtuelles en temps réel.
               </p>
             </motion.div>
 
-            <div className="flex flex-col lg:flex-row items-center gap-12 max-w-5xl mx-auto">
+            <div className="flex flex-col lg:flex-row items-stretch gap-8 lg:gap-10 max-w-6xl mx-auto">
               {/* Slideshow Details Card (Left) */}
-              <div className="w-full lg:w-1/2 flex flex-col gap-4">
+              <div className="w-full lg:w-[45%] flex flex-col gap-2.5">
                 {Object.entries(COMPONENTS).map(([key, comp]) => {
                   const Icon = comp.icon;
                   const isActive = activeTab === key;
+                  const accentColor = comp.color.includes('emerald') ? '#10b981' : 
+                                      comp.color.includes('indigo') ? '#6366f1' : 
+                                      comp.color.includes('cyan') ? '#06b6d4' : 
+                                      comp.color.includes('purple') ? '#a855f7' : '#f43f5e';
                   return (
                     <button
                       key={key}
-                      onClick={() => { setActiveTab(key); setIsPaused(true); }}
-                      className={`flex items-start gap-4 p-5 rounded-2xl border text-left transition-all duration-300 cursor-pointer ${
-                        isActive 
-                          ? 'shadow-[0_4px_20px_rgba(99,102,241,0.1)]' 
-                          : 'border-transparent hover:bg-black/5 dark:hover:bg-white/2'
-                      }`}
+                      onClick={() => handleTabClick(key)}
+                      className="relative overflow-hidden flex items-start gap-4 p-5 rounded-2xl text-left transition-all duration-400 cursor-pointer group"
                       style={{
                         background: isActive ? 'var(--bg-surface-2)' : 'transparent',
-                        borderColor: isActive ? 'var(--border-brand)' : 'transparent',
+                        borderWidth: '1px',
+                        borderStyle: 'solid',
+                        borderColor: isActive ? `${accentColor}33` : 'transparent',
+                        boxShadow: isActive ? `0 4px 24px ${accentColor}15, 0 1px 3px rgba(0,0,0,0.1)` : 'none',
                       }}
                     >
+                      {/* Active accent stripe left */}
                       <div 
-                        className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" 
-                        style={{ backgroundColor: comp.bg, border: `1px solid ${comp.border}` }}
+                        className="absolute left-0 top-[15%] bottom-[15%] w-[3px] rounded-full transition-all duration-400"
+                        style={{ 
+                          backgroundColor: accentColor,
+                          opacity: isActive ? 1 : 0,
+                          transform: isActive ? 'scaleY(1)' : 'scaleY(0)',
+                        }}
+                      />
+                      <div 
+                        className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 transition-all duration-300" 
+                        style={{ 
+                          backgroundColor: isActive ? `${accentColor}18` : comp.bg, 
+                          border: `1px solid ${isActive ? `${accentColor}40` : comp.border}`,
+                          boxShadow: isActive ? `0 0 20px ${accentColor}20` : 'none'
+                        }}
                       >
-                        <Icon size={20} className={comp.color} />
+                        <Icon size={20} className={comp.color} style={{ filter: isActive ? `drop-shadow(0 0 6px ${accentColor}60)` : 'none' }} />
                       </div>
-                      <div>
-                        <h3 className="text-sm font-bold mb-1" style={{ color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)' }}>{comp.title}</h3>
-                        {isActive && (
-                          <motion.p 
-                            initial={{ opacity: 0, height: 0 }} 
-                            animate={{ opacity: 1, height: 'auto' }} 
-                            className="text-xs mt-2 leading-relaxed"
-                            style={{ color: 'var(--text-secondary)' }}
-                          >
-                            {comp.desc}
-                          </motion.p>
-                        )}
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-sm font-bold mb-0.5 transition-colors duration-300" style={{ color: isActive ? 'var(--text-primary)' : 'var(--text-muted)' }}>{comp.title}</h3>
+                        <AnimatePresence>
+                          {isActive && (
+                            <motion.p 
+                              initial={{ opacity: 0, height: 0, marginTop: 0 }} 
+                              animate={{ opacity: 1, height: 'auto', marginTop: 6 }} 
+                              exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                              transition={{ duration: 0.3, ease: 'easeOut' }}
+                              className="text-xs leading-relaxed"
+                              style={{ color: 'var(--text-secondary)' }}
+                            >
+                              {comp.desc}
+                            </motion.p>
+                          )}
+                        </AnimatePresence>
                       </div>
+                      {/* Progress bar at bottom */}
+                      {isActive && (
+                        <div 
+                          className="absolute bottom-0 left-0 h-[2px] rounded-full transition-all duration-75 ease-linear" 
+                          style={{ 
+                            width: `${progress}%`, 
+                            background: `linear-gradient(90deg, ${accentColor}00, ${accentColor})`,
+                          }} 
+                        />
+                      )}
                     </button>
                   );
                 })}
@@ -376,77 +418,305 @@ export default function Login({ onLogin }) {
 
               {/* Interactive Slide Graphic (Right) */}
               <div 
-                onMouseEnter={() => setIsPaused(true)} 
-                onMouseLeave={() => setIsPaused(false)} 
-                className="w-full lg:w-1/2 h-[380px] rounded-[32px] border p-8 relative flex items-center justify-center overflow-hidden shadow-2xl transition-all duration-500" 
-                style={{ background: 'rgba(10, 15, 30, 0.45)', borderColor: 'var(--border-soft)' }}
+                className="w-full lg:w-[55%] min-h-[420px] lg:min-h-[480px] rounded-[28px] relative flex items-center justify-center overflow-hidden transition-all duration-700" 
+                style={{ 
+                  background: isDark ? 'linear-gradient(145deg, rgba(8,12,28,0.95) 0%, rgba(15,20,40,0.9) 100%)' : 'var(--bg-surface)',
+                  border: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(99,102,241,0.12)'}`,
+                  boxShadow: isDark 
+                    ? '0 25px 60px -15px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.04)' 
+                    : '0 8px 40px -10px rgba(99,102,241,0.08), 0 0 0 1px rgba(99,102,241,0.04)'
+                }}
               >
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.04)_0,transparent_75%)] pointer-events-none"></div>
+                {/* Background animated grid */}
+                <div className="absolute inset-0 pointer-events-none" style={{ 
+                  backgroundImage: isDark 
+                    ? 'linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)' 
+                    : 'linear-gradient(rgba(99,102,241,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(99,102,241,0.04) 1px, transparent 1px)',
+                  backgroundSize: '40px 40px',
+                  maskImage: 'radial-gradient(ellipse 70% 70% at 50% 50%, #000 20%, transparent 100%)',
+                  WebkitMaskImage: 'radial-gradient(ellipse 70% 70% at 50% 50%, #000 20%, transparent 100%)'
+                }}></div>
+
+                {/* Central glow orb that changes color per tab */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] h-[280px] rounded-full pointer-events-none transition-all duration-1000"
+                  style={{ 
+                    background: `radial-gradient(circle, ${
+                      activeTab === 'decomposer' ? 'rgba(16,185,129,0.12)' : 
+                      activeTab === 'rewriter' ? 'rgba(99,102,241,0.12)' : 
+                      activeTab === 'executor' ? 'rgba(6,182,212,0.12)' : 
+                      activeTab === 'resolver' ? 'rgba(168,85,247,0.12)' : 
+                      'rgba(244,63,94,0.12)'
+                    } 0%, transparent 70%)`,
+                    filter: 'blur(40px)'
+                  }}
+                />
 
                 <AnimatePresence mode="wait">
                   {activeTab === 'decomposer' && (
-                    <motion.div key="decomposer" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="w-full h-full flex flex-col items-center justify-center text-center">
-                      <Blocks size={80} className="text-emerald-500/20 mb-8 animate-pulse" />
-                      <div className="flex gap-4 mb-8 items-center">
-                        <div className="px-4 py-2 rounded-xl text-xs font-mono border bg-white/5 border-white/10 text-slate-300">Global Query</div>
-                        <div className="flex items-center text-white/40"><ArrowRight size={14} /></div>
-                        <div className="px-4 py-2 rounded-xl border text-xs font-mono bg-emerald-500/10 border-emerald-500/20 text-emerald-300">Local Queries</div>
+                    <motion.div key="decomposer" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4, ease: 'easeOut' }} className="w-full h-full flex flex-col items-center justify-center text-center px-6 py-8 relative">
+                      {/* Node graph visualization */}
+                      <svg width="320" height="200" viewBox="0 0 320 200" fill="none" className="mb-6">
+                        {/* Connection lines with animation */}
+                        <motion.line x1="160" y1="35" x2="60" y2="130" stroke="rgba(16,185,129,0.5)" strokeWidth="2" strokeDasharray="6 4" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1, delay: 0.2 }} />
+                        <motion.line x1="160" y1="35" x2="160" y2="130" stroke="rgba(16,185,129,0.5)" strokeWidth="2" strokeDasharray="6 4" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1, delay: 0.4 }} />
+                        <motion.line x1="160" y1="35" x2="260" y2="130" stroke="rgba(16,185,129,0.5)" strokeWidth="2" strokeDasharray="6 4" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1, delay: 0.6 }} />
+                        
+                        {/* Animated data flow particles */}
+                        <motion.circle r="4" fill="#10b981" animate={{ cx: [160, 60], cy: [35, 130], opacity: [1, 0.4] }} transition={{ duration: 2, repeat: Infinity, repeatDelay: 0.5 }} />
+                        <motion.circle r="4" fill="#10b981" animate={{ cx: [160, 160], cy: [35, 130], opacity: [1, 0.4] }} transition={{ duration: 2, repeat: Infinity, repeatDelay: 0.5, delay: 0.3 }} />
+                        <motion.circle r="4" fill="#10b981" animate={{ cx: [160, 260], cy: [35, 130], opacity: [1, 0.4] }} transition={{ duration: 2, repeat: Infinity, repeatDelay: 0.5, delay: 0.6 }} />
+                        
+                        {/* Source node (top) */}
+                        <motion.rect x="120" y="10" width="80" height="50" rx="12" fill="rgba(16,185,129,0.12)" stroke="rgba(16,185,129,0.5)" strokeWidth="1.5" initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', delay: 0.1 }} />
+                        <text x="160" y="38" textAnchor="middle" fill="#10b981" fontSize="10" fontWeight="700" fontFamily="monospace">GLOBAL</text>
+                        
+                        {/* Target nodes (bottom) */}
+                        {[{ x: 20, label: 'PG' }, { x: 120, label: 'MY' }, { x: 220, label: 'MG' }].map((node, i) => (
+                          <g key={i}>
+                            <motion.rect x={node.x} y="110" width="80" height="45" rx="10" fill={isDark ? 'rgba(255,255,255,0.04)' : 'rgba(16,185,129,0.06)'} stroke="rgba(16,185,129,0.35)" strokeWidth="1.5" initial={{ y: 140, opacity: 0 }} animate={{ y: 110, opacity: 1 }} transition={{ delay: 0.3 + i * 0.15, type: 'spring' }} />
+                            <motion.text x={node.x + 40} y="137" textAnchor="middle" fill={isDark ? 'rgba(255,255,255,0.6)' : '#059669'} fontSize="11" fontWeight="700" fontFamily="monospace" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 + i * 0.15 }}>{node.label}</motion.text>
+                          </g>
+                        ))}
+                      </svg>
+                      
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="px-4 py-2 rounded-xl text-xs font-mono border backdrop-blur-sm" style={{ background: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)', borderColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)', color: isDark ? '#94a3b8' : '#64748b' }}>
+                          SELECT * FROM global_employees
+                        </div>
+                        <motion.div animate={{ x: [0, 6, 0] }} transition={{ repeat: Infinity, duration: 1.5 }}>
+                          <ArrowRight size={16} className="text-emerald-400" />
+                        </motion.div>
+                        <div className="px-3 py-2 rounded-xl text-xs font-mono font-bold border" style={{ background: 'rgba(16,185,129,0.1)', borderColor: 'rgba(16,185,129,0.25)', color: '#10b981' }}>3 sub-queries</div>
                       </div>
-                      <span className="font-mono text-[10px] text-emerald-400 font-bold uppercase tracking-widest">DÉCOMPOSITION GAV / LAV</span>
+                      <span className="font-mono text-[10px] font-bold uppercase tracking-[0.25em]" style={{ color: '#10b981' }}>Décomposition GAV / LAV</span>
                     </motion.div>
                   )}
 
                   {activeTab === 'rewriter' && (
-                    <motion.div key="rewriter" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="w-full h-full flex flex-col items-center justify-center text-center">
-                      <Network size={80} className="text-indigo-500/20 mb-8" />
-                      <div className="grid grid-cols-3 gap-6 items-center max-w-sm">
-                        <div className="px-3 py-4 rounded-xl border text-[10px] font-mono bg-indigo-500/5 border-indigo-500/20 text-indigo-300">Bucket Algorithm</div>
-                        <div className="px-3 py-4 rounded-xl border text-[10px] font-mono bg-white/5 border-white/10 text-slate-300">Minicon Plan</div>
-                        <div className="px-3 py-4 rounded-xl border text-[10px] font-mono bg-indigo-500/5 border-indigo-500/20 text-indigo-300">Inverse Rules</div>
+                    <motion.div key="rewriter" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4, ease: 'easeOut' }} className="w-full h-full flex flex-col items-center justify-center text-center px-6 py-8">
+                      {/* Algorithm visualization */}
+                      <svg width="300" height="180" viewBox="0 0 300 180" fill="none" className="mb-6">
+                        {/* Central processing node */}
+                        <motion.circle cx="150" cy="90" r="35" fill="rgba(99,102,241,0.1)" stroke="rgba(99,102,241,0.45)" strokeWidth="1.5" initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring' }} />
+                        <motion.circle cx="150" cy="90" r="20" fill="rgba(99,102,241,0.2)" initial={{ scale: 0 }} animate={{ scale: [1, 1.15, 1] }} transition={{ duration: 2, repeat: Infinity }} />
+                        <text x="150" y="94" textAnchor="middle" fill="#818cf8" fontSize="9" fontWeight="700" fontFamily="monospace">REWRITE</text>
+                        
+                        {/* Orbiting algorithm nodes */}
+                        {[
+                          { angle: -60, label: 'Bucket', color: '#818cf8' },
+                          { angle: 60, label: 'MiniCon', color: '#a78bfa' },
+                          { angle: 180, label: 'InvRules', color: '#6366f1' }
+                        ].map((alg, i) => {
+                          const rad = (alg.angle * Math.PI) / 180;
+                          const cx = 150 + Math.cos(rad) * 100;
+                          const cy = 90 + Math.sin(rad) * 65;
+                          return (
+                            <g key={i}>
+                              <motion.line x1="150" y1="90" x2={cx} y2={cy} stroke={`${alg.color}40`} strokeWidth="1" strokeDasharray="4 3" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.8, delay: i * 0.2 }} />
+                              <motion.rect x={cx - 32} y={cy - 14} width="64" height="28" rx="8" fill={`${alg.color}12`} stroke={`${alg.color}30`} strokeWidth="1" initial={{ scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.3 + i * 0.2, type: 'spring' }} />
+                              <motion.text x={cx} y={cy + 4} textAnchor="middle" fill={alg.color} fontSize="9" fontWeight="600" fontFamily="monospace" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 + i * 0.2 }}>{alg.label}</motion.text>
+                            </g>
+                          );
+                        })}
+                      </svg>
+                      
+                      {/* Terminal-style output */}
+                      <div className="rounded-xl border p-3 text-left max-w-[280px] w-full" style={{ background: isDark ? 'rgba(0,0,0,0.3)' : 'rgba(99,102,241,0.04)', borderColor: isDark ? 'rgba(99,102,241,0.15)' : 'rgba(99,102,241,0.18)' }}>
+                        <div className="flex items-center gap-1.5 mb-2">
+                          <div className="w-2 h-2 rounded-full bg-red-400/60"></div>
+                          <div className="w-2 h-2 rounded-full bg-yellow-400/60"></div>
+                          <div className="w-2 h-2 rounded-full bg-green-400/60"></div>
+                          <span className="text-[9px] ml-2 font-mono" style={{ color: 'var(--text-muted)' }}>rewriter.log</span>
+                        </div>
+                        <div className="font-mono text-[10px] leading-relaxed" style={{ color: isDark ? '#94a3b8' : '#475569' }}>
+                          <span style={{ color: isDark ? '#818cf8' : '#6366f1' }}>▸</span> Optimizing query plan...<br/>
+                          <span style={{ color: '#10b981' }}>✓</span> 3 views rewritten<br/>
+                          <span style={{ color: '#10b981' }}>✓</span> Cost reduced by <span style={{ color: isDark ? '#818cf8' : '#6366f1', fontWeight: 700 }}>42%</span>
+                        </div>
                       </div>
-                      <span className="font-mono text-[10px] text-indigo-400 font-bold uppercase tracking-widest mt-8">MOTEUR DE RÉÉCRITURE (LAV)</span>
+                      <span className="font-mono text-[10px] font-bold uppercase tracking-[0.25em] mt-5" style={{ color: '#6366f1' }}>Moteur de Réécriture (LAV)</span>
                     </motion.div>
                   )}
 
                   {activeTab === 'executor' && (
-                    <motion.div key="executor" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="w-full h-full flex flex-col items-center justify-center text-center">
-                      <Cpu size={80} className="text-cyan-500/20 mb-8" />
-                      <div className="flex gap-4 justify-center">
-                        {[Server, FileJson, Table].map((Ic, idx) => (
-                          <motion.div 
-                            key={idx} 
-                            animate={{ y: [0, -10, 0] }} 
-                            transition={{ duration: 2.2, delay: idx * 0.3, repeat: Infinity }} 
-                            className="w-14 h-14 rounded-2xl bg-cyan-500/5 border border-cyan-500/25 flex items-center justify-center"
-                          >
-                            <Ic size={24} className="text-cyan-400" />
-                          </motion.div>
-                        ))}
+                    <motion.div key="executor" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4, ease: 'easeOut' }} className="w-full h-full flex flex-col items-center justify-center text-center px-6 py-8">
+                      {/* Distributed execution visualization */}
+                      <div className="relative mb-8">
+                        {/* Central coordinator */}
+                        <motion.div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6 relative z-10" style={{ background: 'rgba(6,182,212,0.12)', border: '1px solid rgba(6,182,212,0.3)' }} animate={{ boxShadow: ['0 0 20px rgba(6,182,212,0.1)', '0 0 35px rgba(6,182,212,0.2)', '0 0 20px rgba(6,182,212,0.1)'] }} transition={{ duration: 2.5, repeat: Infinity }}>
+                          <Cpu size={28} className="text-cyan-400" />
+                        </motion.div>
+                        
+                        {/* Database nodes in arc */}
+                        <div className="flex gap-5 justify-center items-end">
+                          {[
+                            { src: '/images/postgresql.png', label: 'PG', delay: 0, status: '✓' },
+                            { src: '/images/mysql.png', label: 'MY', delay: 0.15, status: '✓' },
+                            { src: '/images/mongodb.png', label: 'MG', delay: 0.3, status: '⟳' },
+                            { src: '/images/neo4j.png', label: 'N4', delay: 0.45, status: '…' }
+                          ].map((db, idx) => (
+                            <motion.div 
+                              key={idx}
+                              initial={{ y: 30, opacity: 0 }}
+                              animate={{ y: 0, opacity: 1 }}
+                              transition={{ delay: db.delay, type: 'spring', stiffness: 200 }}
+                              className="flex flex-col items-center gap-2"
+                            >
+                              {/* Connection line dot */}
+                              <motion.div 
+                                className="w-1 h-8 rounded-full" 
+                                style={{ background: `linear-gradient(to bottom, rgba(6,182,212,0.3), rgba(6,182,212,0))` }}
+                                animate={{ opacity: [0.3, 0.8, 0.3] }}
+                                transition={{ duration: 1.5, delay: db.delay, repeat: Infinity }}
+                              />
+                              <motion.div 
+                                className="w-14 h-14 p-2.5 rounded-2xl flex items-center justify-center relative"
+                                style={{ 
+                                  background: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)', 
+                                  border: `1px solid ${isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'}` 
+                                }}
+                                whileHover={{ scale: 1.1, y: -4 }}
+                              >
+                                <img src={db.src} alt={db.label} className="w-full h-full object-contain" />
+                                <motion.div 
+                                  className="absolute -top-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-bold"
+                                  style={{ background: db.status === '✓' ? '#10b981' : db.status === '⟳' ? '#f59e0b' : '#6366f1', color: 'white' }}
+                                  animate={db.status === '⟳' ? { rotate: [0, 360] } : {}}
+                                  transition={{ duration: 1.5, repeat: Infinity }}
+                                >
+                                  {db.status}
+                                </motion.div>
+                              </motion.div>
+                              <span className="text-[9px] font-mono font-bold" style={{ color: 'var(--text-muted)' }}>{db.label}</span>
+                            </motion.div>
+                          ))}
+                        </div>
                       </div>
-                      <span className="font-mono text-[10px] text-cyan-400 font-bold uppercase tracking-widest mt-8">EXÉCUTION DISTRIBUÉE PARALLÈLE</span>
+                      
+                      {/* Progress indicator */}
+                      <div className="w-full max-w-[260px] mb-4">
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="text-[10px] font-mono" style={{ color: 'var(--text-muted)' }}>Exécution parallèle</span>
+                          <motion.span className="text-[10px] font-mono font-bold text-cyan-400" animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 1.5, repeat: Infinity }}>75%</motion.span>
+                        </div>
+                        <div className="h-1.5 rounded-full overflow-hidden" style={{ background: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)' }}>
+                          <motion.div className="h-full rounded-full" style={{ background: 'linear-gradient(90deg, #06b6d4, #22d3ee)' }} initial={{ width: '0%' }} animate={{ width: '75%' }} transition={{ duration: 1.5, ease: 'easeOut' }} />
+                        </div>
+                      </div>
+                      <span className="font-mono text-[10px] font-bold uppercase tracking-[0.25em]" style={{ color: '#06b6d4' }}>Exécution Distribuée Parallèle</span>
                     </motion.div>
                   )}
 
                   {activeTab === 'resolver' && (
-                    <motion.div key="resolver" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="w-full h-full flex flex-col items-center justify-center text-center">
-                      <GitBranch size={80} className="text-purple-500/20 mb-8" />
-                      <div className="p-5 rounded-2xl border max-w-xs text-left bg-slate-900/60 border-white/5">
-                        <div className="text-[10px] font-mono text-purple-400 mb-2">{">> Entity Conflict Detected"}</div>
-                        <div className="text-[10px] font-mono text-slate-300">Resolved via priority mapping :</div>
-                        <div className="text-[10px] font-mono text-emerald-400 font-bold mt-1">{"✓ emp_id 101 -> PostgreSQL Source"}</div>
+                    <motion.div key="resolver" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4, ease: 'easeOut' }} className="w-full h-full flex flex-col items-center justify-center text-center px-6 py-8">
+                      {/* Entity resolution visualization */}
+                      <svg width="280" height="140" viewBox="0 0 280 140" fill="none" className="mb-5">
+                        {/* Duplicate entities merging */}
+                        <motion.rect x="10" y="20" width="90" height="55" rx="10" fill="rgba(168,85,247,0.08)" stroke="rgba(168,85,247,0.4)" strokeWidth="1.5" initial={{ x: -20, opacity: 0 }} animate={{ x: 10, opacity: 1 }} transition={{ duration: 0.6 }} />
+                        <text x="55" y="42" textAnchor="middle" fill={isDark ? '#94a3b8' : '#475569'} fontSize="8" fontWeight="600" fontFamily="monospace">emp_id: 101</text>
+                        <text x="55" y="55" textAnchor="middle" fill="#a855f7" fontSize="8" fontWeight="600" fontFamily="monospace">Source: PG</text>
+                        <text x="55" y="68" textAnchor="middle" fill={isDark ? '#64748b' : '#64748b'} fontSize="7" fontWeight="500" fontFamily="monospace">salary: 45000</text>
+
+                        <motion.rect x="180" y="20" width="90" height="55" rx="10" fill="rgba(168,85,247,0.08)" stroke="rgba(168,85,247,0.4)" strokeWidth="1.5" initial={{ x: 300, opacity: 0 }} animate={{ x: 180, opacity: 1 }} transition={{ duration: 0.6 }} />
+                        <text x="225" y="42" textAnchor="middle" fill={isDark ? '#94a3b8' : '#475569'} fontSize="8" fontWeight="600" fontFamily="monospace">emp_id: 101</text>
+                        <text x="225" y="55" textAnchor="middle" fill="#c084fc" fontSize="8" fontWeight="600" fontFamily="monospace">Source: MY</text>
+                        <text x="225" y="68" textAnchor="middle" fill={isDark ? '#64748b' : '#64748b'} fontSize="7" fontWeight="500" fontFamily="monospace">salary: 47000</text>
+
+                        {/* Merge arrows */}
+                        <motion.path d="M100 47 L125 100" stroke="rgba(168,85,247,0.5)" strokeWidth="1.5" strokeDasharray="4 3" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.8, delay: 0.6 }} />
+                        <motion.path d="M180 47 L155 100" stroke="rgba(168,85,247,0.5)" strokeWidth="1.5" strokeDasharray="4 3" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.8, delay: 0.8 }} />
+
+                        {/* Resolved entity */}
+                        <motion.rect x="105" y="90" width="70" height="40" rx="10" fill="rgba(16,185,129,0.1)" stroke="rgba(16,185,129,0.35)" strokeWidth="1.5" initial={{ scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 1, type: 'spring' }} />
+                        <motion.text x="140" y="107" textAnchor="middle" fill="#10b981" fontSize="8" fontWeight="700" fontFamily="monospace" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}>✓ Resolved</motion.text>
+                        <motion.text x="140" y="120" textAnchor="middle" fill="#10b981" fontSize="7" fontFamily="monospace" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.3 }}>PG priority</motion.text>
+                      </svg>
+                      
+                      {/* Conflict resolution log */}
+                      <div className="rounded-xl border p-3 text-left max-w-[280px] w-full" style={{ background: isDark ? 'rgba(0,0,0,0.3)' : 'rgba(168,85,247,0.04)', borderColor: isDark ? 'rgba(168,85,247,0.15)' : 'rgba(168,85,247,0.18)' }}>
+                        <div className="flex items-center gap-1.5 mb-2">
+                          <div className="w-2 h-2 rounded-full bg-red-400/60"></div>
+                          <div className="w-2 h-2 rounded-full bg-yellow-400/60"></div>
+                          <div className="w-2 h-2 rounded-full bg-green-400/60"></div>
+                          <span className="text-[9px] ml-2 font-mono" style={{ color: 'var(--text-muted)' }}>conflicts.log</span>
+                        </div>
+                        <div className="font-mono text-[10px] leading-relaxed" style={{ color: isDark ? '#94a3b8' : '#475569' }}>
+                          <span style={{ color: '#f59e0b' }}>⚠</span> Conflict on <span style={{ color: '#a855f7' }}>emp_id:101</span><br/>
+                          <span style={{ color: '#10b981' }}>✓</span> Resolved → <span style={{ color: '#10b981', fontWeight: 700 }}>PostgreSQL wins</span>
+                        </div>
                       </div>
-                      <span className="font-mono text-[10px] text-purple-400 font-bold uppercase tracking-widest mt-6">RÉSOLUTION DE CONFLITS</span>
+                      <span className="font-mono text-[10px] font-bold uppercase tracking-[0.25em] mt-5" style={{ color: '#a855f7' }}>Résolution de Conflits</span>
                     </motion.div>
                   )}
 
                   {activeTab === 'security' && (
-                    <motion.div key="security" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="w-full h-full flex flex-col items-center justify-center text-center">
-                      <Lock size={80} className="text-rose-500/20 mb-8 animate-bounce" />
-                      <div className="p-4 rounded-xl bg-rose-500/5 border border-rose-500/25 flex items-center gap-3">
-                        <Shield size={20} className="text-rose-400" />
-                        <span className="font-mono text-xs text-rose-300">{"Col: salary -> FILTERED (Role: pm)"}</span>
+                    <motion.div key="security" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4, ease: 'easeOut' }} className="w-full h-full flex flex-col items-center justify-center text-center px-6 py-8">
+                      {/* Security shield visualization */}
+                      <div className="relative mb-6">
+                        <motion.div 
+                          className="w-20 h-20 rounded-2xl flex items-center justify-center relative"
+                          style={{ background: 'rgba(244,63,94,0.08)', border: '1.5px solid rgba(244,63,94,0.25)' }}
+                          animate={{ boxShadow: ['0 0 0 0 rgba(244,63,94,0)', '0 0 0 12px rgba(244,63,94,0.06)', '0 0 0 0 rgba(244,63,94,0)'] }}
+                          transition={{ duration: 2.5, repeat: Infinity }}
+                        >
+                          <Shield size={36} className="text-rose-400" />
+                        </motion.div>
+                        {/* Orbiting lock icons */}
+                        {[0, 1, 2].map((i) => (
+                          <motion.div
+                            key={i}
+                            className="absolute w-6 h-6 rounded-lg flex items-center justify-center"
+                            style={{ 
+                              background: 'rgba(244,63,94,0.1)', 
+                              border: '1px solid rgba(244,63,94,0.2)',
+                              top: '50%', left: '50%'
+                            }}
+                            animate={{ 
+                              x: [Math.cos((i * 120 * Math.PI) / 180) * 52 - 12, Math.cos(((i * 120 + 360) * Math.PI) / 180) * 52 - 12],
+                              y: [Math.sin((i * 120 * Math.PI) / 180) * 52 - 12, Math.sin(((i * 120 + 360) * Math.PI) / 180) * 52 - 12],
+                            }}
+                            transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
+                          >
+                            <Lock size={10} className="text-rose-400" />
+                          </motion.div>
+                        ))}
                       </div>
-                      <span className="font-mono text-[10px] text-rose-400 font-bold uppercase tracking-widest mt-8">SÉCURITÉ D'ACCÈS RBAC</span>
+                      
+                      {/* RBAC role matrix */}
+                      <div className="grid grid-cols-3 gap-2 mb-5 max-w-[280px] w-full">
+                        {[
+                          { role: 'admin', access: 'FULL', color: '#10b981' },
+                          { role: 'finance', access: 'PARTIAL', color: '#f59e0b' },
+                          { role: 'pm', access: 'FILTERED', color: '#f43f5e' },
+                        ].map((r, i) => (
+                          <motion.div 
+                            key={i}
+                            className="rounded-lg p-2.5 text-center border"
+                            style={{ 
+                              background: `${r.color}08`, 
+                              borderColor: `${r.color}20` 
+                            }}
+                            initial={{ scale: 0, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            transition={{ delay: 0.3 + i * 0.15, type: 'spring' }}
+                          >
+                            <div className="text-[9px] font-mono font-bold mb-1" style={{ color: r.color }}>{r.role}</div>
+                            <div className="text-[8px] font-mono" style={{ color: isDark ? '#94a3b8' : '#64748b' }}>{r.access}</div>
+                          </motion.div>
+                        ))}
+                      </div>
+                      
+                      {/* Filtered column indicator */}
+                      <div className="rounded-xl border p-3 flex items-center gap-3 max-w-[280px] w-full" style={{ background: 'rgba(244,63,94,0.05)', borderColor: 'rgba(244,63,94,0.18)' }}>
+                        <motion.div animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 1.5, repeat: Infinity }}>
+                          <Eye size={16} className="text-rose-400" />
+                        </motion.div>
+                        <div className="text-left">
+                          <div className="font-mono text-[10px]" style={{ color: isDark ? '#94a3b8' : '#64748b' }}>Col: <span style={{ color: '#f43f5e', fontWeight: 700 }}>salary</span> → MASKED</div>
+                          <div className="font-mono text-[9px]" style={{ color: 'var(--text-muted)' }}>Role: pm | Policy: column-filter</div>
+                        </div>
+                      </div>
+                      <span className="font-mono text-[10px] font-bold uppercase tracking-[0.25em] mt-5" style={{ color: '#f43f5e' }}>Sécurité d'Accès RBAC</span>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -562,8 +832,12 @@ export default function Login({ onLogin }) {
                     style={{ background: 'var(--bg-surface)', borderColor: 'var(--border-subtle)' }}
                     onClick={() => setShowAuthModal(true)}
                   >
-                    <div className="w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 border" style={{ backgroundColor: src.bg, borderColor: src.border }}>
-                      <Icon size={24} style={{ color: src.color }} />
+                    <div className="w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 border overflow-hidden p-2.5" style={{ backgroundColor: src.bg, borderColor: src.border }}>
+                      {src.image ? (
+                        <img src={src.image} alt={src.label} className="w-full h-full object-contain filter drop-shadow-md" />
+                      ) : (
+                        <Icon size={24} style={{ color: src.color }} />
+                      )}
                     </div>
                     <div>
                       <span className="block font-bold text-sm text-white" style={{ color: 'var(--text-primary)' }}>{src.label}</span>
@@ -623,13 +897,8 @@ export default function Login({ onLogin }) {
         <footer className="w-full border-t py-16 transition-colors duration-500" style={{ background: 'var(--bg-surface)', borderColor: 'var(--border-subtle)' }}>
           <div className="max-w-7xl mx-auto px-6">
             <div className="flex flex-col md:flex-row items-center justify-between gap-6 border-b pb-8 mb-8" style={{ borderColor: 'var(--border-subtle)' }}>
-              <div className="flex items-center gap-3">
-                <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6">
-                  <path d="M16 3L27 9L16 15L5 9L16 3Z" fill="#6366f1"/>
-                  <path d="M16 10L27 16L16 22L5 16L16 10Z" fill="#ec4899"/>
-                  <path d="M16 17L27 23L16 29L5 23L16 17Z" fill="#06b6d4"/>
-                </svg>
-                <span className="font-extrabold text-sm text-white tracking-tight" style={{ color: 'var(--text-primary)' }}>DataMediator Pro</span>
+              <div className="flex items-center">
+                <img src="/logo.png" alt="DataMediator Pro" className="h-10 w-auto object-contain" />
               </div>
               <p className="text-xs text-slate-400" style={{ color: 'var(--text-muted)' }}>&copy; 2026 Projet Académique. Master Intégration de Données. Soutenance ready.</p>
             </div>

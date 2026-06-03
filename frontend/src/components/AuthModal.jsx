@@ -1,17 +1,17 @@
 import { useState, useRef, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
-  ArrowRight, Database, Eye, EyeOff, Loader2, ShieldCheck, Sparkles, 
-  X, Zap, Users, BarChart3, Wallet, UserRound, Lock, AlertCircle
+  ArrowRight, Database, Eye, EyeOff, Loader2, Shield, Layers, 
+  X, Server, Users, Briefcase, Landmark, User, Lock, AlertCircle, Network
 } from 'lucide-react';
 import { api, describeError } from '../lib/api';
 
 const DEMO_ACCOUNTS = [
-  { role: 'Administrateur',  user: 'admin',   pass: 'admin123',   icon: ShieldCheck, hue: 'indigo'  },
-  { role: 'RH',              user: 'hr',      pass: 'hr123',      icon: Users,       hue: 'emerald' },
-  { role: 'Chef de projet',  user: 'project', pass: 'project123', icon: BarChart3,   hue: 'cyan'    },
-  { role: 'Finance',         user: 'finance', pass: 'finance123', icon: Wallet,      hue: 'amber'   },
-  { role: 'Lecteur',         user: 'viewer',  pass: 'viewer123',  icon: UserRound,   hue: 'slate'   },
+  { role: 'Administrateur',  user: 'admin',   pass: 'admin123',   icon: Lock,      hue: 'indigo'  },
+  { role: 'RH',              user: 'hr',      pass: 'hr123',      icon: Users,     hue: 'emerald' },
+  { role: 'Chef de projet',  user: 'project', pass: 'project123', icon: Briefcase, hue: 'cyan'    },
+  { role: 'Finance',         user: 'finance', pass: 'finance123', icon: Landmark,  hue: 'amber'   },
+  { role: 'Lecteur',         user: 'viewer',  pass: 'viewer123',  icon: User,      hue: 'slate'   },
 ];
 
 export default function AuthModal({ isOpen, onClose, onSuccess }) {
@@ -97,11 +97,8 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
 
               <div className="relative z-10">
                 {/* Brand Logo */}
-                <div className="inline-flex items-center gap-3 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 mb-8">
-                  <div className="w-6 h-6 rounded-lg bg-indigo-500/20 flex items-center justify-center">
-                    <Database size={13} className="text-indigo-400" />
-                  </div>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-indigo-300">DataMediator Pro</span>
+                <div className="mb-8">
+                  <img src="/logo.png" alt="Logo" className="h-28 w-auto object-contain" />
                 </div>
 
                 <h2 className="text-2xl font-black text-white leading-tight mb-3">
@@ -114,9 +111,9 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
                 {/* Features list */}
                 <div className="flex flex-col gap-5">
                   {[
-                    { icon: Zap, color: 'text-indigo-400', bg: 'bg-indigo-500/5', border: 'border-indigo-500/10', title: 'Calcul GAV / LAV', desc: 'Traduction automatique des requêtes globales.' },
-                    { icon: ShieldCheck, color: 'text-emerald-400', bg: 'bg-emerald-500/5', border: 'border-emerald-500/10', title: 'Sécurité RBAC', desc: 'Politiques de sécurité et masquage centralisés.' },
-                    { icon: Sparkles, color: 'text-cyan-400', bg: 'bg-cyan-500/5', border: 'border-cyan-500/10', title: 'Entity Resolution', desc: 'Détection et résolution instantanée des conflits.' },
+                    { icon: Server, color: 'text-indigo-400', bg: 'bg-indigo-500/5', border: 'border-indigo-500/10', title: 'Calcul GAV / LAV', desc: 'Traduction automatique des requêtes globales.' },
+                    { icon: Shield, color: 'text-emerald-400', bg: 'bg-emerald-500/5', border: 'border-emerald-500/10', title: 'Sécurité RBAC', desc: 'Politiques de sécurité et masquage centralisés.' },
+                    { icon: Network, color: 'text-cyan-400', bg: 'bg-cyan-500/5', border: 'border-cyan-500/10', title: 'Entity Resolution', desc: 'Détection et résolution instantanée des conflits.' },
                   ].map(({ icon: Icon, color, bg, border, title, desc }) => (
                     <div key={title} className="flex gap-4 items-start">
                       <div className={`w-8 h-8 rounded-lg ${bg} border ${border} flex items-center justify-center flex-shrink-0`}>
