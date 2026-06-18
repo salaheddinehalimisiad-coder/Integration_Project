@@ -80,7 +80,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        pip install pytest pytest-cov pytest-asyncio
+        pip install pytest pytest-cov pytest-asyncio playwright
 
     - name: Run linting
       run: |
@@ -88,12 +88,13 @@ jobs:
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         black --check .
         isort --check-only .
-        mypy enterprise_mediator.py --ignore-missing-imports
+        mypy backend/app/services/enterprise_mediator.py --ignore-missing-imports
 
     - name: Run unit tests
       run: |
         pytest tests/ -v --tb=short --cov=. --cov-report=xml --cov-report=html
       env:
+        PYTHONPATH: backend:backend/app:backend/app/services:backend/app/core:backend/app/utils
         DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
         MYSQL_URL: mysql://root:mysql@localhost:3306/test_db
         MONGODB_URL: mongodb://mongo:mongo@localhost:27017/test_db
@@ -109,6 +110,7 @@ jobs:
       run: |
         pytest tests/test_api_complete.py -v -m "not e2e and not load"
       env:
+        PYTHONPATH: backend:backend/app:backend/app/services:backend/app/core:backend/app/utils
         DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
         MYSQL_URL: mysql://root:mysql@localhost:3306/test_db
         MONGODB_URL: mongodb://mongo:mongo@localhost:27017/test_db
@@ -117,6 +119,7 @@ jobs:
       run: |
         pytest tests/test_load.py -v -m "load" --timeout=300
       env:
+        PYTHONPATH: backend:backend/app:backend/app/services:backend/app/core:backend/app/utils
         DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
         MYSQL_URL: mysql://root:mysql@localhost:3306/test_db
         MONGODB_URL: mongodb://mongo:mongo@localhost:27017/test_db
