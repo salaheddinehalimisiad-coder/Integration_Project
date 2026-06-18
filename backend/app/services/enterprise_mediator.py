@@ -475,11 +475,21 @@ def _seed_hr() -> None:
     ]
     cur.executemany("INSERT INTO departments(dept_code, dept_name, country) VALUES (?,?,?)", departments)
     employees = [
-        ("EMP-001", "Amine", "Brahimi", "amine.brahimi@univ-dz.dz", "1990-05-15", 2500, 1, "ACTIVE"),
-        ("EMP-002", "Sarah", "Mansouri", "s.mansouri@it-dz.com", "1992-11-20", 2800, 2, "ACTIVE"),
-        ("EMP-003", "Mohamed", "Khelifi", "m.khelifi@tech-algerie.dz", "1988-03-10", 3200, 3, "ACTIVE"),
-        ("EMP-004", "Yasmine", "Ziani", "yasmine.z@startup-dz.com", "1995-07-30", 2100, 4, "ACTIVE"),
-        ("EMP-005", "Karim", "Belkacem", "k.belkacem@esi.dz", "1985-12-12", 4000, 1, "INACTIVE"),
+        ("EMP-001", "Amine", "Bensaid", "amine.bensaid@corp.dz", "1995-03-14", 3200, 1, "ACTIVE"),
+        ("EMP-002", "Sarah", "Mansouri", "sarah.mansouri@corp.fr", "1990-07-09", 4100, 3, "ACTIVE"),
+        ("EMP-003", "Yacine", "Haddad", "yacine.haddad@corp.dz", "1998-11-21", 2700, 4, "ACTIVE"),
+        ("EMP-004", "Yasmine", "Mekki", "yasmine.mekki@corp.dz", "1992-01-22", 3900, 2, "ACTIVE"),
+        ("EMP-005", "Nour", "Ait Salem", "nour.aitsalem@corp.dz", "1997-09-10", 2500, 6, "ACTIVE"),
+        ("EMP-006", "Omar", "Trabelsi", "omar.trabelsi@corp.tn", "1991-12-04", 3000, 5, "INACTIVE"),
+        ("EMP-007", "Tarek", "Bouzid", "tarek.bouzid@corp.dz", "1988-05-15", 4500, 7, "ACTIVE"),
+        ("EMP-008", "Kenza", "Belkacem", "kenza.belkacem@corp.dz", "1993-08-30", 2800, 1, "ACTIVE"),
+        ("EMP-009", "Walid", "Saidi", "walid.saidi@corp.dz", "1996-02-18", 2600, 4, "ACTIVE"),
+        ("EMP-010", "Fatima", "Allal", "fatima.allal@corp.dz", "1985-10-25", 5200, 2, "ACTIVE"),
+        ("EMP-011", "Farid", "Ziani", "farid.ziani@corp.dz", "1989-06-12", 3800, 6, "ACTIVE"),
+        ("EMP-012", "Amira", "Berrada", "amira.berrada@corp.tn", "1994-04-05", 3100, 5, "ACTIVE"),
+        ("EMP-013", "Mehdi", "Cherif", "mehdi.cherif@corp.fr", "1990-09-22", 4300, 3, "ACTIVE"),
+        ("EMP-014", "Leila", "Djouadi", "leila.djouadi@corp.dz", "1995-11-11", 2900, 1, "ACTIVE"),
+        ("EMP-015", "Nabil", "Khelifi", "nabil.khelifi@corp.dz", "1987-03-08", 4700, 7, "INACTIVE"),
     ]
     cur.executemany(
         "INSERT INTO employees(matricule, first_name, last_name, email, birth_date, salary_eur, dept_id, status) VALUES (?,?,?,?,?,?,?,?)",
@@ -523,21 +533,35 @@ def _seed_projects() -> None:
         """
     )
     consultants = [
-        ("EMP-001", "Amine Brahimi", "amine.brahimi@univ-dz.dz", "IA", 1),
-        ("EMP-003", "Mohamed Khelifi", "m.khelifi@tech-algerie.dz", "Génie Logiciel", 1),
-        ("CONS-01", "Ryad Mahrez", "r.mahrez@freelance.dz", "Sécurité", 1),
-        ("CONS-02", "Lina Boutefarka", "lina.b@it-consulting.dz", "Cloud", 1),
+        ("EMP-001", "Amine Bensaid", "amine.bensaid@corp.dz", "IT", 1),
+        ("EMP-003", "Yacine Haddad", "yacine.haddad@corp.dz", "Data", 1),
+        ("EMP-007", "Tarek Bouzid", "tarek.bouzid@corp.dz", "Cybersecurity", 1),
+        ("EMP-014", "Leila Djouadi", "leila.djouadi@corp.dz", "Operations", 1),
+        ("C-771", "Nour Ait Salem", "nour.aitsalem@corp.dz", "AI", 1),
+        ("C-882", "Meriem Khelifi", "meriem.khelifi@corp.dz", "Operations", 1),
+        ("C-404", "Omar Trabelsi", "omar.trabelsi@corp.tn", "Operations", 0),
+        ("C-505", "Hamza Chergui", "hamza.chergui@corp.dz", "Data", 1),
+        ("C-606", "Dounia Othmani", "dounia.othmani@corp.dz", "IT", 1),
+        ("C-707", "Sofiane Medjkane", "sofiane.medjkane@corp.fr", "Cybersecurity", 1),
     ]
     projects = [
-        ("PRJ-EDJ", "Système E-Djazair", "Gouvernement DZ", "ACTIVE", "2024-01-01", "2025-12-31"),
-        ("PRJ-CLD", "Infrastructure Cloud DZ", "Algérie Télécom", "ACTIVE", "2024-06-01", "2025-06-01"),
-        ("PRJ-SEC", "Audit Cybersécurité", "Ministère Finances", "ACTIVE", "2024-03-01", "2024-09-01"),
+        ("PRJ-AI", "AI Risk Platform", "Sonatrach Digital", "ACTIVE", "2026-01-15", "2026-10-30"),
+        ("PRJ-DW", "Data Quality Hub", "Algeria Telecom", "ACTIVE", "2026-02-01", "2026-08-15"),
+        ("PRJ-ERP", "ERP Finance Migration", "Numidia Bank", "PAUSED", "2025-11-10", "2026-12-01"),
+        ("PRJ-HR", "HR Self Service", "Sahara Group", "CLOSED", "2025-02-10", "2025-12-30"),
+        ("PRJ-SEC", "Cyber Audit 2026", "Banque BDL", "ACTIVE", "2026-03-01", "2026-09-30"),
     ]
     assignments = [
-        ("EMP-001", "PRJ-EDJ", "Lead Expert IA", 80),
-        ("EMP-003", "PRJ-CLD", "Ingénieur Cloud", 70),
-        ("CONS-01", "PRJ-SEC", "Expert Pentest", 90),
-        ("CONS-02", "PRJ-CLD", "Architecte Réseaux", 50),
+        ("EMP-001", "PRJ-AI", "Lead Data Engineer", 80),
+        ("EMP-001", "PRJ-DW", "Integration Architect", 20),
+        ("EMP-003", "PRJ-DW", "Data Analyst", 70),
+        ("EMP-007", "PRJ-SEC", "Security Consultant", 100),
+        ("EMP-014", "PRJ-ERP", "Project Manager", 80),
+        ("C-771", "PRJ-AI", "ML Engineer", 90),
+        ("C-882", "PRJ-ERP", "Business Analyst", 50),
+        ("C-505", "PRJ-DW", "Data Engineer", 100),
+        ("C-606", "PRJ-HR", "Frontend Developer", 100),
+        ("C-707", "PRJ-SEC", "Penetration Tester", 100),
     ]
     cur.executemany("INSERT INTO consultants VALUES (?,?,?,?,?)", consultants)
     cur.executemany("INSERT INTO projects VALUES (?,?,?,?,?,?)", projects)
@@ -560,10 +584,14 @@ def _seed_finance() -> None:
         """
     )
     docs = [
-        {"docId": "PAY-001", "nationalId": "DZ-1001", "employeeMatricule": "EMP-001", "name": {"first": "Amine", "last": "Brahimi"}, "monthlySalaryDzd": 455000, "bonusDzd": 80000, "currency": "DZD", "riskLevel": "LOW", "visibleToRoles": ["ADMIN", "HR_MANAGER", "FINANCE_OFFICER"]},
-        {"docId": "PAY-002", "nationalId": "DZ-2022", "employeeMatricule": "EMP-002", "name": {"first": "Sarah", "last": "Mansouri"}, "monthlySalaryDzd": 610000, "bonusDzd": 120000, "currency": "DZD", "riskLevel": "MEDIUM", "visibleToRoles": ["ADMIN", "HR_MANAGER", "FINANCE_OFFICER"]},
-        {"docId": "PAY-003", "nationalId": "DZ-3003", "employeeMatricule": "EMP-003", "name": {"first": "Mohamed", "last": "Khelifi"}, "monthlySalaryDzd": 350000, "bonusDzd": 55000, "currency": "DZD", "riskLevel": "LOW", "visibleToRoles": ["ADMIN", "HR_MANAGER", "FINANCE_OFFICER"]},
-        {"docId": "PAY-004", "nationalId": "DZ-4004", "employeeMatricule": "CONS-01", "name": {"first": "Ryad", "last": "Mahrez"}, "monthlySalaryDzd": 750000, "bonusDzd": 150000, "currency": "DZD", "riskLevel": "HIGH", "visibleToRoles": ["ADMIN", "FINANCE_OFFICER"]},
+        {"docId": "PAY-001", "nationalId": "DZ-1001", "employeeMatricule": "EMP-001", "name": {"first": "Amine", "last": "Bensaid"}, "monthlySalaryDzd": 455000, "bonusDzd": 80000, "currency": "DZD", "riskLevel": "LOW", "visibleToRoles": ["ADMIN", "HR_MANAGER", "FINANCE_OFFICER"]},
+        {"docId": "PAY-002", "nationalId": "DZ-2044", "employeeMatricule": "EMP-002", "name": {"first": "Sarah", "last": "Mansouri"}, "monthlySalaryDzd": 610000, "bonusDzd": 120000, "currency": "DZD", "riskLevel": "MEDIUM", "visibleToRoles": ["ADMIN", "HR_MANAGER", "FINANCE_OFFICER"]},
+        {"docId": "PAY-003", "nationalId": "DZ-3003", "employeeMatricule": "EMP-003", "name": {"first": "Yacine", "last": "Haddad"}, "monthlySalaryDzd": 350000, "bonusDzd": 55000, "currency": "DZD", "riskLevel": "LOW", "visibleToRoles": ["ADMIN", "HR_MANAGER", "FINANCE_OFFICER"]},
+        {"docId": "PAY-004", "nationalId": "DZ-5005", "employeeMatricule": "EMP-005", "name": {"first": "Nour", "last": "Ait Salem"}, "monthlySalaryDzd": 390000, "bonusDzd": 70000, "currency": "DZD", "riskLevel": "HIGH", "visibleToRoles": ["ADMIN", "FINANCE_OFFICER"]},
+        {"docId": "PAY-005", "nationalId": "DZ-6006", "employeeMatricule": "EMP-007", "name": {"first": "Tarek", "last": "Bouzid"}, "monthlySalaryDzd": 650000, "bonusDzd": 150000, "currency": "DZD", "riskLevel": "LOW", "visibleToRoles": ["ADMIN", "HR_MANAGER", "FINANCE_OFFICER"]},
+        {"docId": "PAY-006", "nationalId": "DZ-7007", "employeeMatricule": "EMP-008", "name": {"first": "Kenza", "last": "Belkacem"}, "monthlySalaryDzd": 380000, "bonusDzd": 60000, "currency": "DZD", "riskLevel": "LOW", "visibleToRoles": ["ADMIN", "HR_MANAGER", "FINANCE_OFFICER"]},
+        {"docId": "PAY-007", "nationalId": "DZ-8008", "employeeMatricule": "C-771", "name": {"first": "Nour", "last": "Ait Salem"}, "monthlySalaryDzd": 420000, "bonusDzd": 50000, "currency": "DZD", "riskLevel": "MEDIUM", "visibleToRoles": ["ADMIN", "FINANCE_OFFICER"]},
+        {"docId": "PAY-008", "nationalId": "DZ-9009", "employeeMatricule": "C-505", "name": {"first": "Hamza", "last": "Chergui"}, "monthlySalaryDzd": 480000, "bonusDzd": 75000, "currency": "DZD", "riskLevel": "HIGH", "visibleToRoles": ["ADMIN", "FINANCE_OFFICER"]}
     ]
     cur.executemany("INSERT INTO payroll VALUES (?,?)", [(d["docId"], json.dumps(d)) for d in docs])
     con.commit()
@@ -999,7 +1027,7 @@ class QueryEngine:
         
         # Vérifier le cache
         try:
-            from cache_manager import cache_manager, monitor_performance
+            from app.core.cache_manager import cache_manager, monitor_performance
             cache_key = cache_manager._generate_key(
                 "query_execution",
                 sql=sql,
@@ -1024,7 +1052,7 @@ class QueryEngine:
         for table in parsed.tables:
             # Utiliser les versions cachées des fonctions
             try:
-                from cache_manager import fetch_employees_cached, fetch_departments_cached, fetch_projects_cached
+                from app.core.cache_manager import fetch_employees_cached, fetch_departments_cached, fetch_projects_cached
                 if table == "GlobalEmployee":
                     data, events = fetch_employees_cached(user)
                 elif table == "GlobalDepartment":
@@ -1066,14 +1094,14 @@ class QueryEngine:
         if os.environ.get("DISABLE_CACHE") != "True":
             try:
                 if len(rows) > 0 and len(rows) < 1000:
-                    from cache_manager import cache_manager
+                    from app.core.cache_manager import cache_manager
                     cache_manager.set(cache_key, result, ttl=1800)
             except ImportError:
                 pass
         
         # Monitorer la performance
         try:
-            from cache_manager import performance_monitor
+            from app.core.cache_manager import performance_monitor
             performance_monitor.record_query(sql, result["execution_ms"] / 1000, user.get("username", "anonymous"))
         except ImportError:
             pass
@@ -1192,7 +1220,7 @@ class QueryEngine:
         # Intégration algorithme MiniCon réel
         minicon_details = None
         try:
-            from mini_con import Query, View, Subgoal, minicon_rewrite
+            from app.utils.mini_con import Query, View, Subgoal, minicon_rewrite
             body = []
             pred_args = {
                 "GlobalEmployee":    ("eid", "name", "status"),
@@ -1353,7 +1381,7 @@ def add_demo_employee() -> dict[str, Any]:
 
     # Invalider le cache pour que les prochaines requêtes voient le nouvel employé
     try:
-        from cache_manager import invalidate_table_cache
+        from app.core.cache_manager import invalidate_table_cache
         invalidate_table_cache("GlobalEmployee")
     except ImportError:
         pass

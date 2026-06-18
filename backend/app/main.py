@@ -201,7 +201,7 @@ def minicon_plan(req: QueryRequest, authorization: str | None = Header(default=N
     """
     user = current_user(authorization, require_token=True)
     try:
-        from mini_con import Query, View, Subgoal, minicon_rewrite
+        from app.utils.mini_con import Query, View, Subgoal, minicon_rewrite
     except ImportError:
         raise HTTPException(status_code=500, detail="Module mini_con indisponible")
 
@@ -567,12 +567,12 @@ def resolve_conflict(req: dict, authorization: str | None = Header(default=None)
         logger.info(f"Conflit {conflict_id} sur {field} résolu par {user['username']} avec stratégie {resolution} (Source: {chosen_source})")
         
         if conflict_id and field and chosen_source:
-            from enterprise_mediator import save_conflict_resolution
+            from app.services.enterprise_mediator import save_conflict_resolution
             save_conflict_resolution(conflict_id, field, chosen_source)
             
             # Invalider le cache pour recalculer la table avec les nouvelles fusions !
             try:
-                from cache_manager import invalidate_table_cache
+                from app.core.cache_manager import invalidate_table_cache
                 invalidate_table_cache("GlobalEmployee")
             except ImportError:
                 pass
@@ -641,7 +641,7 @@ def get_cache_stats(authorization: str | None = Header(default=None)):
     user = current_user(authorization, require_token=True)
     
     try:
-        from cache_manager import get_cache_stats
+        from app.core.cache_manager import get_cache_stats
         return get_cache_stats()
     except ImportError:
         return {
@@ -660,7 +660,7 @@ def clear_cache(authorization: str | None = Header(default=None)):
         raise HTTPException(status_code=403, detail="Permission refusée")
     
     try:
-        from cache_manager import cache_manager, invalidate_user_cache
+        from app.core.cache_manager import cache_manager, invalidate_user_cache
         success = cache_manager.clear()
         
         # Invalider le cache de l'utilisateur
@@ -680,7 +680,7 @@ def invalidate_cache(req: dict, authorization: str | None = Header(default=None)
     table = req.get("table")
     
     try:
-        from cache_manager import cache_manager, invalidate_table_cache, invalidate_user_cache
+        from app.core.cache_manager import cache_manager, invalidate_table_cache, invalidate_user_cache
         
         invalidated = 0
         
@@ -702,7 +702,7 @@ def get_performance_stats(authorization: str | None = Header(default=None)):
     user = current_user(authorization, require_token=True)
     
     try:
-        from cache_manager import performance_monitor
+        from app.core.cache_manager import performance_monitor
         return performance_monitor.get_stats()
     except ImportError:
         return {"query_stats": {}, "slow_queries": [], "total_queries": 0, "avg_query_time": 0}
@@ -712,7 +712,7 @@ def get_performance_stats(authorization: str | None = Header(default=None)):
 def health_check():
     """Health check principal du système."""
     try:
-        from monitoring import monitoring_system
+        from app.core.monitoring import monitoring_system
         
         # Exécuter les health checks
         health_results = monitoring_system.health_checker.run_all_checks()
@@ -747,7 +747,7 @@ def get_monitoring_metrics(authorization: str | None = Header(default=None)):
         raise HTTPException(status_code=403, detail="Permission refusée")
     
     try:
-        from monitoring import monitoring_system
+        from app.core.monitoring import monitoring_system
         return monitoring_system.get_monitoring_summary()
     except ImportError:
         return {
@@ -770,7 +770,7 @@ def get_monitoring_alerts(authorization: str | None = Header(default=None)):
         raise HTTPException(status_code=403, detail="Permission refusée")
     
     try:
-        from monitoring import monitoring_system
+        from app.core.monitoring import monitoring_system
         alert_manager = monitoring_system.alert_manager
         
         return {
@@ -791,7 +791,7 @@ def resolve_alert(alert_id: str, authorization: str | None = Header(default=None
         raise HTTPException(status_code=403, detail="Permission refusée")
     
     try:
-        from monitoring import monitoring_system
+        from app.core.monitoring import monitoring_system
         success = monitoring_system.alert_manager.resolve_alert(alert_id)
         
         if success:
@@ -814,7 +814,7 @@ def start_monitoring_system(req: dict, authorization: str | None = Header(defaul
     interval = req.get("interval", 30)
     
     try:
-        from monitoring import start_monitoring
+        from app.core.monitoring import start_monitoring
         start_monitoring(interval)
         return {"success": True, "message": f"Monitoring started with {interval}s interval"}
     except ImportError:
@@ -831,7 +831,7 @@ def stop_monitoring_system(authorization: str | None = Header(default=None)):
         raise HTTPException(status_code=403, detail="Permission refusée")
     
     try:
-        from monitoring import stop_monitoring
+        from app.core.monitoring import stop_monitoring
         stop_monitoring()
         return {"success": True, "message": "Monitoring stopped"}
     except ImportError:
@@ -1063,7 +1063,7 @@ def health():
 
 @app.get("/api/health/db_mode")
 def db_mode():
-    from enterprise_mediator import USE_DOCKER
+    from app.services.enterprise_mediator import USE_DOCKER
     return {"mode": "DOCKER" if USE_DOCKER else "SQLITE"}
 
 

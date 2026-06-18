@@ -21,14 +21,16 @@ Write-Host "============================================================" -Foreg
 
 # ----- Mode SQLite vs Docker -----
 Section "Mode de base de donnees"
-$docker = Read-Host "Activer le mode Docker (PostgreSQL/MySQL/Mongo reels) ? (O/N) [Defaut N]"
-if ($docker -match "^(O|o|Y|y)$") {
-    $env:USE_DOCKER = "True"
-    Ok "Mode Docker active"
-} else {
-    $env:USE_DOCKER = "False"
-    Warn "Mode SQLite local active (par defaut)"
+$env:USE_DOCKER = "True"
+Ok "Mode Docker active (demarrage automatique de tous les services)"
+Info "Lancement des conteneurs via docker-compose..."
+docker-compose up -d
+if ($LASTEXITCODE -ne 0) {
+    Err "Echec du demarrage des conteneurs Docker. Verifiez que Docker Desktop est lance."
+    exit 1
 }
+Info "Patientez 10 secondes le temps que les bases de donnees s'initialisent..."
+Start-Sleep -Seconds 10
 
 # ----- Pre-requis -----
 Section "Pre-requis"
@@ -41,7 +43,7 @@ Section "Dependances Python"
 python -c "import fastapi, uvicorn, pydantic_settings, jwt, bcrypt, sqlglot" 2>$null
 if ($LASTEXITCODE -ne 0) {
     Info "Installation des paquets manquants..."
-    python -m pip install -q -r "$ROOT\requirements.txt"
+    python -m pip install -q -r "$ROOT\backend\requirements.txt"
     if ($LASTEXITCODE -ne 0) { Err "Echec installation Python"; exit 1 }
     Ok "Paquets installes"
 } else {
@@ -72,13 +74,13 @@ foreach ($port in 5001, 3000) {
 
 # ----- Sources heterogenes -----
 Section "Sources heterogenes (S1..S6)"
-python "$ROOT\sources\setup_enterprise_sources.py"
+python "$ROOT\backend\sources\setup_enterprise_sources.py"
 if ($LASTEXITCODE -ne 0) { Err "Echec generation sources"; exit 1 }
 
 # ----- VALIDATION : main.py s'importe sans erreur ? -----
 Section "Validation du backend (import main.py)"
-Push-Location $ROOT
-python -c "import main; print('Endpoints:', len([r for r in main.app.routes if hasattr(r, 'path')]))" 2>&1
+Push-Location "$ROOT\backend"
+python -c "import app.main; print('Endpoints:', len([r for r in app.main.app.routes if hasattr(r, 'path')]))" 2>&1
 $ok = ($LASTEXITCODE -eq 0)
 Pop-Location
 if (-not $ok) {
@@ -92,7 +94,7 @@ Ok "main.py s'importe sans erreur"
 # ----- Lancement backend -----
 Section "Demarrage backend (FastAPI :5001)"
 $envDocker = $env:USE_DOCKER
-Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$ROOT'; `$env:USE_DOCKER='$envDocker'; Write-Host '=== Backend DataMediator Pro ===' -ForegroundColor Cyan; python -m uvicorn main:app --host 0.0.0.0 --port 5001 --reload"
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$ROOT\backend'; `$env:USE_DOCKER='$envDocker'; Write-Host '=== Backend DataMediator Pro ===' -ForegroundColor Cyan; python -m uvicorn app.main:app --host 0.0.0.0 --port 5001 --reload"
 Info "Patientez 5 secondes le temps qu'uvicorn demarre..."
 Start-Sleep -Seconds 5
 

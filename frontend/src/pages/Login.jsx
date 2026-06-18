@@ -63,18 +63,18 @@ function useCounter(end, duration = 1200) {
 
 const SOURCES = [
   { icon: Database, label: 'PostgreSQL', kind: 'SQL View', color: '#336791', bg: 'rgba(51,103,145,0.08)', border: 'rgba(51,103,145,0.25)', image: '/images/postgresql.png' },
-  { icon: Server,   label: 'MySQL',      kind: 'SQL View', color: '#f29111', bg: 'rgba(242,145,17,0.08)', border: 'rgba(242,145,17,0.25)', image: '/images/mysql.png' },
-  { icon: FileJson, label: 'MongoDB',    kind: 'NoSQL Collection', color: '#47a248', bg: 'rgba(71,162,72,0.08)', border: 'rgba(71,162,72,0.25)', image: '/images/mongodb.png' },
-  { icon: Network,  label: 'Neo4j Graph', kind: 'JSON Graph', color: '#008cc1', bg: 'rgba(0,140,193,0.08)', border: 'rgba(0,140,193,0.25)', image: '/images/neo4j.png' },
-  { icon: Code2,    label: 'XML API',    kind: 'Structured API', color: '#7c3aed', bg: 'rgba(124,58,237,0.08)', border: 'rgba(124,58,237,0.25)', image: '/images/restapi.png' },
-  { icon: Table,    label: 'CSV File',   kind: 'Flat Database', color: '#64748b', bg: 'rgba(100,116,139,0.08)', border: 'rgba(100,116,139,0.25)', image: '/images/csv.png' }
+  { icon: Server, label: 'MySQL', kind: 'SQL View', color: '#f29111', bg: 'rgba(242,145,17,0.08)', border: 'rgba(242,145,17,0.25)', image: '/images/mysql.png' },
+  { icon: FileJson, label: 'MongoDB', kind: 'NoSQL Collection', color: '#47a248', bg: 'rgba(71,162,72,0.08)', border: 'rgba(71,162,72,0.25)', image: '/images/mongodb.png' },
+  { icon: Network, label: 'Neo4j Graph', kind: 'JSON Graph', color: '#008cc1', bg: 'rgba(0,140,193,0.08)', border: 'rgba(0,140,193,0.25)', image: '/images/neo4j.png' },
+  { icon: Code2, label: 'XML API', kind: 'Structured API', color: '#7c3aed', bg: 'rgba(124,58,237,0.08)', border: 'rgba(124,58,237,0.25)', image: '/images/restapi.png' },
+  { icon: Table, label: 'CSV File', kind: 'Flat Database', color: '#64748b', bg: 'rgba(100,116,139,0.08)', border: 'rgba(100,116,139,0.25)', image: '/images/csv.png' }
 ];
 
 const STEPS = [
-  { icon: Database, title: 'Déclarez vos sources', desc: 'Définissez la chaîne de connexion de vos 6 bases physiques (Postgres, MySQL, MongoDB, Neo4j, XML, CSV) au niveau du médiateur.' },
-  { icon: BrainCircuit, title: 'Définissez les Mappings', desc: 'Établissez la correspondance exacte entre les attributs des bases de données physiques et votre schéma global virtuel.' },
-  { icon: Shield, title: 'Configurez la Sécurité', desc: 'Configurez le contrôle d\'accès centralisé RBAC et appliquez le masquage ou le chiffrement de colonnes sensibles.' },
-  { icon: BarChart4, title: 'Fédérez & Interrogez', desc: 'Exécutez vos requêtes globales. Le médiateur réécrit, distribue, résout les conflits et fusionne le résultat au vol.' }
+  { icon: Database, image: '/images/step1.png', title: 'Déclarez vos sources', desc: 'Définissez la chaîne de connexion de vos 6 bases physiques (Postgres, MySQL, MongoDB, Neo4j, XML, CSV) au niveau du médiateur.' },
+  { icon: BrainCircuit, image: '/images/step2.png', title: 'Définissez les Mappings', desc: 'Établissez la correspondance exacte entre les attributs des bases de données physiques et votre schéma global virtuel.' },
+  { icon: Shield, image: '/images/step3.png', title: 'Configurez la Sécurité', desc: 'Configurez le contrôle d\'accès centralisé RBAC et appliquez le masquage ou le chiffrement de colonnes sensibles.' },
+  { icon: BarChart4, image: '/images/step4.png', title: 'Fédérez & Interrogez', desc: 'Exécutez vos requêtes globales. Le médiateur réécrit, distribue, résout les conflits et fusionne le résultat au vol.' }
 ];
 
 const FAQS = [
@@ -183,11 +183,11 @@ export default function Login({ onLogin }) {
 
   return (
     <>
-      <SEO title="DataMediator Pro — Médiation Intelligente de Données" 
-           description="Fédérez vos bases de données hétérogènes en temps réel sous un schéma virtuel global" />
+      <SEO title="DataMediator Pro — Médiation Intelligente de Données"
+        description="Fédérez vos bases de données hétérogènes en temps réel sous un schéma virtuel global" />
 
       <div className="relative w-full min-h-screen overflow-x-hidden font-sans pb-20" style={{ background: 'var(--bg-base)', color: 'var(--text-primary)' }}>
-        
+
         {/* ── Ambient background glow ── */}
         <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
           <div className="absolute top-[-10%] left-[10%] w-[50%] h-[50%] rounded-full bg-indigo-400/8 blur-[180px]"></div>
@@ -204,7 +204,7 @@ export default function Login({ onLogin }) {
             </div>
 
             <div className="hidden lg:flex items-center gap-8 text-sm font-semibold" style={{ color: 'var(--text-secondary)' }}>
-              <button onClick={(e) => scrollToSection(e, 'platform')} className="hover:text-indigo-400 transition-colors cursor-pointer">Composants IA</button>
+              <button onClick={(e) => scrollToSection(e, 'platform')} className="hover:text-indigo-400 transition-colors cursor-pointer">Fonctionnement</button>
               <button onClick={(e) => scrollToSection(e, 'howitworks')} className="hover:text-indigo-400 transition-colors cursor-pointer">Comment ça marche</button>
               <button onClick={(e) => scrollToSection(e, 'integrations')} className="hover:text-indigo-400 transition-colors cursor-pointer">Bases supportées</button>
               <button onClick={(e) => scrollToSection(e, 'faq')} className="hover:text-indigo-400 transition-colors cursor-pointer">FAQ</button>
@@ -228,7 +228,7 @@ export default function Login({ onLogin }) {
             {mobileMenuOpen && (
               <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="lg:hidden overflow-hidden border-t" style={{ borderColor: 'var(--border-subtle)', background: 'var(--bg-surface)' }}>
                 <div className="px-6 py-4 flex flex-col gap-3 text-sm font-semibold animate-fade-in" style={{ color: 'var(--text-secondary)' }}>
-                  <button className="text-left" onClick={(e) => scrollToSection(e, 'platform')}>Composants IA</button>
+                  <button className="text-left" onClick={(e) => scrollToSection(e, 'platform')}>Fonctionnement</button>
                   <button className="text-left" onClick={(e) => scrollToSection(e, 'howitworks')}>Comment ça marche</button>
                   <button className="text-left" onClick={(e) => scrollToSection(e, 'integrations')}>Bases supportées</button>
                   <button className="text-left text-indigo-400" onClick={() => { setShowAuthModal(true); setMobileMenuOpen(false); }}>Se connecter</button>
@@ -241,7 +241,7 @@ export default function Login({ onLogin }) {
         {/* ── HERO ── */}
         <main className="relative z-10 w-full max-w-7xl mx-auto px-6 pt-36 pb-24 md:pt-44 md:pb-32 flex flex-col items-center">
           <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="w-full flex flex-col items-center text-center">
-            
+
             {/* Eyebrow removed */}
 
             <motion.h1 variants={fadeInUp} className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.08] mb-6 max-w-5xl" style={{ color: 'var(--text-primary)' }}>
@@ -265,25 +265,29 @@ export default function Login({ onLogin }) {
             </motion.div>
 
             {/* Hero visual / abstract pipeline */}
-            <motion.div variants={scaleIn} className="w-full max-w-5xl relative">
+            <motion.div variants={scaleIn} className="w-full max-w-7xl relative">
               <div className="rounded-3xl border p-1 shadow-2xl" style={{ borderColor: 'var(--border-default)', background: 'var(--bg-surface-2)', boxShadow: 'var(--shadow-lg)' }}>
-                <div className="rounded-2xl p-6 md:p-10 relative overflow-hidden" style={{ background: 'var(--bg-surface)' }}>
-                  <div className="flex flex-col lg:flex-row items-center justify-between gap-4 w-full">
+                <div className="rounded-2xl p-4 md:p-8 relative overflow-hidden" style={{ background: 'var(--bg-surface)' }}>
+                  <div className="flex flex-col lg:flex-row items-stretch justify-between gap-3 w-full">
                     {[
-                      { icon: Database, label: '6 Sources Physiques', color: 'text-emerald-500', bg: 'rgba(16,185,129,0.08)', border: 'rgba(16,185,129,0.2)' },
-                      { icon: BrainCircuit, label: 'Mapping GAV / LAV', color: 'text-indigo-500', bg: 'rgba(99,102,241,0.08)', border: 'rgba(99,102,241,0.2)' },
-                      { icon: Code2, label: 'Réécriture de requêtes', color: 'text-cyan-500', bg: 'rgba(6,182,212,0.08)', border: 'rgba(6,182,212,0.2)' },
-                      { icon: Zap, label: 'Exécution distribuée', color: 'text-purple-500', bg: 'rgba(168,85,247,0.08)', border: 'rgba(168,85,247,0.2)' },
-                      { icon: BarChart4, label: 'Schéma Réconcilié', color: 'text-rose-500', bg: 'rgba(244,63,94,0.08)', border: 'rgba(244,63,94,0.2)' }
+                      { icon: Database, image: '/images/hero1.png', label: '6 Sources Physiques', color: 'text-emerald-500', bg: 'rgba(16,185,129,0.08)', border: 'rgba(16,185,129,0.2)' },
+                      { icon: BrainCircuit, image: '/images/hero2.png', label: 'Mapping GAV / LAV', color: 'text-indigo-500', bg: 'rgba(99,102,241,0.08)', border: 'rgba(99,102,241,0.2)' },
+                      { icon: Code2, image: '/images/hero3.png', label: 'Réécriture de requêtes', color: 'text-cyan-500', bg: 'rgba(6,182,212,0.08)', border: 'rgba(6,182,212,0.2)' },
+                      { icon: Zap, image: '/images/hero4.png', label: 'Exécution distribuée', color: 'text-purple-500', bg: 'rgba(168,85,247,0.08)', border: 'rgba(168,85,247,0.2)' },
+                      { icon: BarChart4, image: '/images/hero5.png', label: 'Schéma Réconcilié', color: 'text-rose-500', bg: 'rgba(244,63,94,0.08)', border: 'rgba(244,63,94,0.2)' }
                     ].map((step, i) => (
                       <React.Fragment key={i}>
-                        <motion.div 
-                          whileHover={{ y: -4 }} 
-                          className="flex flex-col items-center justify-center gap-3 p-5 rounded-2xl border transition-all flex-1 min-w-[130px]"
+                        <motion.div
+                          whileHover={{ scale: 1.05, y: -4 }}
+                          className="flex flex-col items-center justify-between gap-3 p-3 md:p-4 rounded-2xl border transition-all flex-1 min-w-[150px]"
                           style={{ backgroundColor: step.bg, borderColor: step.border }}
                         >
-                          <step.icon size={28} className={step.color} />
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-center" style={{ color: 'var(--text-secondary)' }}>{step.label}</span>
+                          {step.image ? (
+                            <img src={step.image} alt={step.label} className="h-24 md:h-32 lg:h-36 w-full object-contain mix-blend-multiply dark:mix-blend-normal dark:invert hover:scale-110 transition-transform duration-300" />
+                          ) : (
+                            <step.icon size={28} className={step.color} />
+                          )}
+                          <span className="text-[10px] md:text-xs font-bold uppercase tracking-wider text-center" style={{ color: 'var(--text-secondary)' }}>{step.label}</span>
                         </motion.div>
                         {i < 4 && (
                           <div className="hidden lg:flex items-center justify-center shrink-0">
@@ -348,10 +352,10 @@ export default function Login({ onLogin }) {
                 {Object.entries(COMPONENTS).map(([key, comp]) => {
                   const Icon = comp.icon;
                   const isActive = activeTab === key;
-                  const accentColor = comp.color.includes('emerald') ? '#10b981' : 
-                                      comp.color.includes('indigo') ? '#6366f1' : 
-                                      comp.color.includes('cyan') ? '#06b6d4' : 
-                                      comp.color.includes('purple') ? '#a855f7' : '#f43f5e';
+                  const accentColor = comp.color.includes('emerald') ? '#10b981' :
+                    comp.color.includes('indigo') ? '#6366f1' :
+                      comp.color.includes('cyan') ? '#06b6d4' :
+                        comp.color.includes('purple') ? '#a855f7' : '#f43f5e';
                   return (
                     <button
                       key={key}
@@ -366,18 +370,18 @@ export default function Login({ onLogin }) {
                       }}
                     >
                       {/* Active accent stripe left */}
-                      <div 
+                      <div
                         className="absolute left-0 top-[15%] bottom-[15%] w-[3px] rounded-full transition-all duration-400"
-                        style={{ 
+                        style={{
                           backgroundColor: accentColor,
                           opacity: isActive ? 1 : 0,
                           transform: isActive ? 'scaleY(1)' : 'scaleY(0)',
                         }}
                       />
-                      <div 
-                        className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 transition-all duration-300" 
-                        style={{ 
-                          backgroundColor: isActive ? `${accentColor}18` : comp.bg, 
+                      <div
+                        className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 transition-all duration-300"
+                        style={{
+                          backgroundColor: isActive ? `${accentColor}18` : comp.bg,
                           border: `1px solid ${isActive ? `${accentColor}40` : comp.border}`,
                           boxShadow: isActive ? `0 0 20px ${accentColor}20` : 'none'
                         }}
@@ -388,9 +392,9 @@ export default function Login({ onLogin }) {
                         <h3 className="text-sm font-bold mb-0.5 transition-colors duration-300" style={{ color: isActive ? 'var(--text-primary)' : 'var(--text-muted)' }}>{comp.title}</h3>
                         <AnimatePresence>
                           {isActive && (
-                            <motion.p 
-                              initial={{ opacity: 0, height: 0, marginTop: 0 }} 
-                              animate={{ opacity: 1, height: 'auto', marginTop: 6 }} 
+                            <motion.p
+                              initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                              animate={{ opacity: 1, height: 'auto', marginTop: 6 }}
                               exit={{ opacity: 0, height: 0, marginTop: 0 }}
                               transition={{ duration: 0.3, ease: 'easeOut' }}
                               className="text-xs leading-relaxed"
@@ -403,12 +407,12 @@ export default function Login({ onLogin }) {
                       </div>
                       {/* Progress bar at bottom */}
                       {isActive && (
-                        <div 
-                          className="absolute bottom-0 left-0 h-[2px] rounded-full transition-all duration-75 ease-linear" 
-                          style={{ 
-                            width: `${progress}%`, 
+                        <div
+                          className="absolute bottom-0 left-0 h-[2px] rounded-full transition-all duration-75 ease-linear"
+                          style={{
+                            width: `${progress}%`,
                             background: `linear-gradient(90deg, ${accentColor}00, ${accentColor})`,
-                          }} 
+                          }}
                         />
                       )}
                     </button>
@@ -417,20 +421,20 @@ export default function Login({ onLogin }) {
               </div>
 
               {/* Interactive Slide Graphic (Right) */}
-              <div 
-                className="w-full lg:w-[55%] min-h-[420px] lg:min-h-[480px] rounded-[28px] relative flex items-center justify-center overflow-hidden transition-all duration-700" 
-                style={{ 
+              <div
+                className="w-full lg:w-[55%] min-h-[420px] lg:min-h-[480px] rounded-[28px] relative flex items-center justify-center overflow-hidden transition-all duration-700"
+                style={{
                   background: isDark ? 'linear-gradient(145deg, rgba(8,12,28,0.95) 0%, rgba(15,20,40,0.9) 100%)' : 'var(--bg-surface)',
                   border: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(99,102,241,0.12)'}`,
-                  boxShadow: isDark 
-                    ? '0 25px 60px -15px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.04)' 
+                  boxShadow: isDark
+                    ? '0 25px 60px -15px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.04)'
                     : '0 8px 40px -10px rgba(99,102,241,0.08), 0 0 0 1px rgba(99,102,241,0.04)'
                 }}
               >
                 {/* Background animated grid */}
-                <div className="absolute inset-0 pointer-events-none" style={{ 
-                  backgroundImage: isDark 
-                    ? 'linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)' 
+                <div className="absolute inset-0 pointer-events-none" style={{
+                  backgroundImage: isDark
+                    ? 'linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)'
                     : 'linear-gradient(rgba(99,102,241,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(99,102,241,0.04) 1px, transparent 1px)',
                   backgroundSize: '40px 40px',
                   maskImage: 'radial-gradient(ellipse 70% 70% at 50% 50%, #000 20%, transparent 100%)',
@@ -439,14 +443,13 @@ export default function Login({ onLogin }) {
 
                 {/* Central glow orb that changes color per tab */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] h-[280px] rounded-full pointer-events-none transition-all duration-1000"
-                  style={{ 
-                    background: `radial-gradient(circle, ${
-                      activeTab === 'decomposer' ? 'rgba(16,185,129,0.12)' : 
-                      activeTab === 'rewriter' ? 'rgba(99,102,241,0.12)' : 
-                      activeTab === 'executor' ? 'rgba(6,182,212,0.12)' : 
-                      activeTab === 'resolver' ? 'rgba(168,85,247,0.12)' : 
-                      'rgba(244,63,94,0.12)'
-                    } 0%, transparent 70%)`,
+                  style={{
+                    background: `radial-gradient(circle, ${activeTab === 'decomposer' ? 'rgba(16,185,129,0.12)' :
+                      activeTab === 'rewriter' ? 'rgba(99,102,241,0.12)' :
+                        activeTab === 'executor' ? 'rgba(6,182,212,0.12)' :
+                          activeTab === 'resolver' ? 'rgba(168,85,247,0.12)' :
+                            'rgba(244,63,94,0.12)'
+                      } 0%, transparent 70%)`,
                     filter: 'blur(40px)'
                   }}
                 />
@@ -460,16 +463,16 @@ export default function Login({ onLogin }) {
                         <motion.line x1="160" y1="35" x2="60" y2="130" stroke="rgba(16,185,129,0.5)" strokeWidth="2" strokeDasharray="6 4" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1, delay: 0.2 }} />
                         <motion.line x1="160" y1="35" x2="160" y2="130" stroke="rgba(16,185,129,0.5)" strokeWidth="2" strokeDasharray="6 4" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1, delay: 0.4 }} />
                         <motion.line x1="160" y1="35" x2="260" y2="130" stroke="rgba(16,185,129,0.5)" strokeWidth="2" strokeDasharray="6 4" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1, delay: 0.6 }} />
-                        
+
                         {/* Animated data flow particles */}
                         <motion.circle r="4" fill="#10b981" animate={{ cx: [160, 60], cy: [35, 130], opacity: [1, 0.4] }} transition={{ duration: 2, repeat: Infinity, repeatDelay: 0.5 }} />
                         <motion.circle r="4" fill="#10b981" animate={{ cx: [160, 160], cy: [35, 130], opacity: [1, 0.4] }} transition={{ duration: 2, repeat: Infinity, repeatDelay: 0.5, delay: 0.3 }} />
                         <motion.circle r="4" fill="#10b981" animate={{ cx: [160, 260], cy: [35, 130], opacity: [1, 0.4] }} transition={{ duration: 2, repeat: Infinity, repeatDelay: 0.5, delay: 0.6 }} />
-                        
+
                         {/* Source node (top) */}
                         <motion.rect x="120" y="10" width="80" height="50" rx="12" fill="rgba(16,185,129,0.12)" stroke="rgba(16,185,129,0.5)" strokeWidth="1.5" initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', delay: 0.1 }} />
                         <text x="160" y="38" textAnchor="middle" fill="#10b981" fontSize="10" fontWeight="700" fontFamily="monospace">GLOBAL</text>
-                        
+
                         {/* Target nodes (bottom) */}
                         {[{ x: 20, label: 'PG' }, { x: 120, label: 'MY' }, { x: 220, label: 'MG' }].map((node, i) => (
                           <g key={i}>
@@ -478,7 +481,7 @@ export default function Login({ onLogin }) {
                           </g>
                         ))}
                       </svg>
-                      
+
                       <div className="flex items-center gap-3 mb-4">
                         <div className="px-4 py-2 rounded-xl text-xs font-mono border backdrop-blur-sm" style={{ background: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)', borderColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)', color: isDark ? '#94a3b8' : '#64748b' }}>
                           SELECT * FROM global_employees
@@ -500,7 +503,7 @@ export default function Login({ onLogin }) {
                         <motion.circle cx="150" cy="90" r="35" fill="rgba(99,102,241,0.1)" stroke="rgba(99,102,241,0.45)" strokeWidth="1.5" initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring' }} />
                         <motion.circle cx="150" cy="90" r="20" fill="rgba(99,102,241,0.2)" initial={{ scale: 0 }} animate={{ scale: [1, 1.15, 1] }} transition={{ duration: 2, repeat: Infinity }} />
                         <text x="150" y="94" textAnchor="middle" fill="#818cf8" fontSize="9" fontWeight="700" fontFamily="monospace">REWRITE</text>
-                        
+
                         {/* Orbiting algorithm nodes */}
                         {[
                           { angle: -60, label: 'Bucket', color: '#818cf8' },
@@ -519,7 +522,7 @@ export default function Login({ onLogin }) {
                           );
                         })}
                       </svg>
-                      
+
                       {/* Terminal-style output */}
                       <div className="rounded-xl border p-3 text-left max-w-[280px] w-full" style={{ background: isDark ? 'rgba(0,0,0,0.3)' : 'rgba(99,102,241,0.04)', borderColor: isDark ? 'rgba(99,102,241,0.15)' : 'rgba(99,102,241,0.18)' }}>
                         <div className="flex items-center gap-1.5 mb-2">
@@ -529,8 +532,8 @@ export default function Login({ onLogin }) {
                           <span className="text-[9px] ml-2 font-mono" style={{ color: 'var(--text-muted)' }}>rewriter.log</span>
                         </div>
                         <div className="font-mono text-[10px] leading-relaxed" style={{ color: isDark ? '#94a3b8' : '#475569' }}>
-                          <span style={{ color: isDark ? '#818cf8' : '#6366f1' }}>▸</span> Optimizing query plan...<br/>
-                          <span style={{ color: '#10b981' }}>✓</span> 3 views rewritten<br/>
+                          <span style={{ color: isDark ? '#818cf8' : '#6366f1' }}>▸</span> Optimizing query plan...<br />
+                          <span style={{ color: '#10b981' }}>✓</span> 3 views rewritten<br />
                           <span style={{ color: '#10b981' }}>✓</span> Cost reduced by <span style={{ color: isDark ? '#818cf8' : '#6366f1', fontWeight: 700 }}>42%</span>
                         </div>
                       </div>
@@ -546,7 +549,7 @@ export default function Login({ onLogin }) {
                         <motion.div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6 relative z-10" style={{ background: 'rgba(6,182,212,0.12)', border: '1px solid rgba(6,182,212,0.3)' }} animate={{ boxShadow: ['0 0 20px rgba(6,182,212,0.1)', '0 0 35px rgba(6,182,212,0.2)', '0 0 20px rgba(6,182,212,0.1)'] }} transition={{ duration: 2.5, repeat: Infinity }}>
                           <Cpu size={28} className="text-cyan-400" />
                         </motion.div>
-                        
+
                         {/* Database nodes in arc */}
                         <div className="flex gap-5 justify-center items-end">
                           {[
@@ -555,7 +558,7 @@ export default function Login({ onLogin }) {
                             { src: '/images/mongodb.png', label: 'MG', delay: 0.3, status: '⟳' },
                             { src: '/images/neo4j.png', label: 'N4', delay: 0.45, status: '…' }
                           ].map((db, idx) => (
-                            <motion.div 
+                            <motion.div
                               key={idx}
                               initial={{ y: 30, opacity: 0 }}
                               animate={{ y: 0, opacity: 1 }}
@@ -563,22 +566,22 @@ export default function Login({ onLogin }) {
                               className="flex flex-col items-center gap-2"
                             >
                               {/* Connection line dot */}
-                              <motion.div 
-                                className="w-1 h-8 rounded-full" 
+                              <motion.div
+                                className="w-1 h-8 rounded-full"
                                 style={{ background: `linear-gradient(to bottom, rgba(6,182,212,0.3), rgba(6,182,212,0))` }}
                                 animate={{ opacity: [0.3, 0.8, 0.3] }}
                                 transition={{ duration: 1.5, delay: db.delay, repeat: Infinity }}
                               />
-                              <motion.div 
+                              <motion.div
                                 className="w-14 h-14 p-2.5 rounded-2xl flex items-center justify-center relative"
-                                style={{ 
-                                  background: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)', 
-                                  border: `1px solid ${isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'}` 
+                                style={{
+                                  background: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)',
+                                  border: `1px solid ${isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'}`
                                 }}
                                 whileHover={{ scale: 1.1, y: -4 }}
                               >
                                 <img src={db.src} alt={db.label} className="w-full h-full object-contain" />
-                                <motion.div 
+                                <motion.div
                                   className="absolute -top-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-bold"
                                   style={{ background: db.status === '✓' ? '#10b981' : db.status === '⟳' ? '#f59e0b' : '#6366f1', color: 'white' }}
                                   animate={db.status === '⟳' ? { rotate: [0, 360] } : {}}
@@ -592,7 +595,7 @@ export default function Login({ onLogin }) {
                           ))}
                         </div>
                       </div>
-                      
+
                       {/* Progress indicator */}
                       <div className="w-full max-w-[260px] mb-4">
                         <div className="flex items-center justify-between mb-1.5">
@@ -631,7 +634,7 @@ export default function Login({ onLogin }) {
                         <motion.text x="140" y="107" textAnchor="middle" fill="#10b981" fontSize="8" fontWeight="700" fontFamily="monospace" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}>✓ Resolved</motion.text>
                         <motion.text x="140" y="120" textAnchor="middle" fill="#10b981" fontSize="7" fontFamily="monospace" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.3 }}>PG priority</motion.text>
                       </svg>
-                      
+
                       {/* Conflict resolution log */}
                       <div className="rounded-xl border p-3 text-left max-w-[280px] w-full" style={{ background: isDark ? 'rgba(0,0,0,0.3)' : 'rgba(168,85,247,0.04)', borderColor: isDark ? 'rgba(168,85,247,0.15)' : 'rgba(168,85,247,0.18)' }}>
                         <div className="flex items-center gap-1.5 mb-2">
@@ -641,7 +644,7 @@ export default function Login({ onLogin }) {
                           <span className="text-[9px] ml-2 font-mono" style={{ color: 'var(--text-muted)' }}>conflicts.log</span>
                         </div>
                         <div className="font-mono text-[10px] leading-relaxed" style={{ color: isDark ? '#94a3b8' : '#475569' }}>
-                          <span style={{ color: '#f59e0b' }}>⚠</span> Conflict on <span style={{ color: '#a855f7' }}>emp_id:101</span><br/>
+                          <span style={{ color: '#f59e0b' }}>⚠</span> Conflict on <span style={{ color: '#a855f7' }}>emp_id:101</span><br />
                           <span style={{ color: '#10b981' }}>✓</span> Resolved → <span style={{ color: '#10b981', fontWeight: 700 }}>PostgreSQL wins</span>
                         </div>
                       </div>
@@ -653,7 +656,7 @@ export default function Login({ onLogin }) {
                     <motion.div key="security" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4, ease: 'easeOut' }} className="w-full h-full flex flex-col items-center justify-center text-center px-6 py-8">
                       {/* Security shield visualization */}
                       <div className="relative mb-6">
-                        <motion.div 
+                        <motion.div
                           className="w-20 h-20 rounded-2xl flex items-center justify-center relative"
                           style={{ background: 'rgba(244,63,94,0.08)', border: '1.5px solid rgba(244,63,94,0.25)' }}
                           animate={{ boxShadow: ['0 0 0 0 rgba(244,63,94,0)', '0 0 0 12px rgba(244,63,94,0.06)', '0 0 0 0 rgba(244,63,94,0)'] }}
@@ -666,12 +669,12 @@ export default function Login({ onLogin }) {
                           <motion.div
                             key={i}
                             className="absolute w-6 h-6 rounded-lg flex items-center justify-center"
-                            style={{ 
-                              background: 'rgba(244,63,94,0.1)', 
+                            style={{
+                              background: 'rgba(244,63,94,0.1)',
                               border: '1px solid rgba(244,63,94,0.2)',
                               top: '50%', left: '50%'
                             }}
-                            animate={{ 
+                            animate={{
                               x: [Math.cos((i * 120 * Math.PI) / 180) * 52 - 12, Math.cos(((i * 120 + 360) * Math.PI) / 180) * 52 - 12],
                               y: [Math.sin((i * 120 * Math.PI) / 180) * 52 - 12, Math.sin(((i * 120 + 360) * Math.PI) / 180) * 52 - 12],
                             }}
@@ -681,7 +684,7 @@ export default function Login({ onLogin }) {
                           </motion.div>
                         ))}
                       </div>
-                      
+
                       {/* RBAC role matrix */}
                       <div className="grid grid-cols-3 gap-2 mb-5 max-w-[280px] w-full">
                         {[
@@ -689,12 +692,12 @@ export default function Login({ onLogin }) {
                           { role: 'finance', access: 'PARTIAL', color: '#f59e0b' },
                           { role: 'pm', access: 'FILTERED', color: '#f43f5e' },
                         ].map((r, i) => (
-                          <motion.div 
+                          <motion.div
                             key={i}
                             className="rounded-lg p-2.5 text-center border"
-                            style={{ 
-                              background: `${r.color}08`, 
-                              borderColor: `${r.color}20` 
+                            style={{
+                              background: `${r.color}08`,
+                              borderColor: `${r.color}20`
                             }}
                             initial={{ scale: 0, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
@@ -705,7 +708,7 @@ export default function Login({ onLogin }) {
                           </motion.div>
                         ))}
                       </div>
-                      
+
                       {/* Filtered column indicator */}
                       <div className="rounded-xl border p-3 flex items-center gap-3 max-w-[280px] w-full" style={{ background: 'rgba(244,63,94,0.05)', borderColor: 'rgba(244,63,94,0.18)' }}>
                         <motion.div animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 1.5, repeat: Infinity }}>
@@ -797,9 +800,13 @@ export default function Login({ onLogin }) {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {STEPS.map((step, i) => (
                 <motion.div key={i} variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-50px' }} className="group relative rounded-3xl border p-8 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl" style={{ background: 'var(--bg-surface)', borderColor: 'var(--border-subtle)' }}>
-                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6 text-white shadow-lg" style={{ background: 'var(--grad-primary)' }}>
-                    <step.icon size={26} />
-                  </div>
+                  {step.image ? (
+                    <img src={step.image} alt={step.title} className="h-20 w-auto mb-6 object-contain mix-blend-multiply dark:mix-blend-normal dark:invert" />
+                  ) : (
+                    <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6 text-white shadow-lg" style={{ background: 'var(--grad-primary)' }}>
+                      <step.icon size={26} />
+                    </div>
+                  )}
                   <div className="text-xs font-black uppercase tracking-widest mb-3" style={{ color: 'var(--text-muted)' }}>Étape {i + 1}</div>
                   <h3 className="text-xl font-bold mb-3" style={{ color: 'var(--text-primary)' }}>{step.title}</h3>
                   <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{step.desc}</p>
@@ -816,7 +823,7 @@ export default function Login({ onLogin }) {
             <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center mb-16">
               <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight mb-5" style={{ color: 'var(--text-primary)' }}>Sources & Bases Fédérées</h2>
               <p className="text-lg max-w-2xl mx-auto leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                DataMediator Pro s'interface sans aucun agent local avec 6 formats de données structurés et semi-structurés.
+                DataMediator Pro s'interface avec 6 formats de données structurés et semi-structurés.
               </p>
             </motion.div>
 
@@ -882,7 +889,7 @@ export default function Login({ onLogin }) {
         <section className="w-full py-24 md:py-32 border-t relative overflow-hidden flex flex-col items-center justify-center text-center" style={{ borderColor: 'var(--border-subtle)', background: 'linear-gradient(180deg, var(--bg-base) 0%, var(--bg-elevated) 100%)' }}>
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom,rgba(61,106,232,0.06)_0,transparent_60%)]"></div>
           <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="relative z-10 max-w-2xl px-6 flex flex-col items-center">
-            <h2 className="text-3xl md:text-5xl font-extrabold mb-6 tracking-tight" style={{ color: 'var(--text-primary)' }}>Prêt à fédérer vos données ?</h2>
+            <h2 className="text-3xl md:text-5xl font-extrabold mb-6 tracking-tight" style={{ color: 'var(--text-primary)' }}>Prêt à fédérer vos données?</h2>
             <p className="text-lg mb-10 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
               Accédez à la console d'administration et interrogez vos 6 sources locales en temps réel sous un schéma unique.
             </p>
@@ -900,7 +907,7 @@ export default function Login({ onLogin }) {
               <div className="flex items-center">
                 <img src="/logo.png" alt="DataMediator Pro" className="h-10 w-auto object-contain" />
               </div>
-              <p className="text-xs text-slate-400" style={{ color: 'var(--text-muted)' }}>&copy; 2026 Projet Académique. Master Intégration de Données. Soutenance ready.</p>
+              <p className="text-xs text-slate-400" style={{ color: 'var(--text-muted)' }}>&copy; 2026 Projet Integration et Médiation des Données</p>
             </div>
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               <span className="text-xs" style={{ color: 'var(--text-dim)' }}>Architecture GAV / LAV · JWT · Bcrypt · RBAC Secured</span>
@@ -910,16 +917,17 @@ export default function Login({ onLogin }) {
         </footer>
 
         {/* ── AUTH MODAL ── */}
-        <AuthModal 
-          isOpen={showAuthModal} 
-          onClose={() => setShowAuthModal(false)} 
+        <AuthModal
+          isOpen={showAuthModal}
+          onClose={() => setShowAuthModal(false)}
           onSuccess={(userData) => {
             setShowAuthModal(false);
             onLogin?.(userData);
-          }} 
+          }}
         />
 
-        <style dangerouslySetInnerHTML={{ __html: `
+        <style dangerouslySetInnerHTML={{
+          __html: `
           .shadow-glow { box-shadow: 0 0 25px rgba(99,102,241,0.3); }
           ::-webkit-scrollbar { width: 5px; }
           ::-webkit-scrollbar-track { background: transparent; }

@@ -142,7 +142,7 @@ class MetricsCollector:
     def get_application_metrics(self) -> Dict[str, Any]:
         """Récupère les métriques applicatives"""
         try:
-            from cache_manager import cache_manager, performance_monitor
+            from app.core.cache_manager import cache_manager, performance_monitor
             
             # Métriques de cache
             cache_stats = cache_manager.get_stats()
@@ -436,7 +436,7 @@ class HealthChecker:
     def check_database(self) -> Dict[str, Any]:
         """Vérifie la connexion à la base de données"""
         try:
-            from enterprise_mediator import query_postgres
+            from app.services.enterprise_mediator import query_postgres
             
             # Test simple
             result = query_postgres("SELECT 1 as test")
@@ -462,7 +462,7 @@ class HealthChecker:
     def check_cache(self) -> Dict[str, Any]:
         """Vérifie le système de cache"""
         try:
-            from cache_manager import cache_manager
+            from app.core.cache_manager import cache_manager
             
             stats = cache_manager.get_stats()
             

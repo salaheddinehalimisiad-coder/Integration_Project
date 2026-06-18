@@ -35,6 +35,7 @@ export default function ToastProvider({ children }) {
       title: opts.title || '',
       description: opts.description || '',
       duration: opts.duration ?? 4500,
+      image: opts.image || null,
     };
     setToasts((prev) => [...prev, t]);
     if (t.duration > 0) {
@@ -69,7 +70,11 @@ export default function ToastProvider({ children }) {
                 transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
                 layout
               >
-                <Icon size={18} className="toast__icon" />
+                {t.image ? (
+                  <img src={t.image} alt="logo" className="w-10 h-10 object-contain mr-1 drop-shadow-md" />
+                ) : (
+                  <Icon size={18} className="toast__icon" />
+                )}
                 <div className="toast__body">
                   {t.title && <div className="toast__title">{t.title}</div>}
                   {t.description && <div className="toast__desc">{t.description}</div>}

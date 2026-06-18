@@ -288,7 +288,7 @@ def cache_table(ttl: int = 1800, table_name: str = ""):
 @cache_query(ttl=300, key_prefix="dashboard")  # 5 minutes
 def get_dashboard_metrics_cached(user: dict, time_range: str = "7d", department: str = "all"):
     """Version cachée des métriques du dashboard"""
-    from enterprise_mediator import fetch_global_table
+    from app.services.enterprise_mediator import fetch_global_table
     
     # Calculer les métriques
     employees_data, reconciliation_events = fetch_global_table("GlobalEmployee", user)
@@ -315,19 +315,19 @@ def get_dashboard_metrics_cached(user: dict, time_range: str = "7d", department:
 @cache_table(ttl=1800, table_name="GlobalEmployee")
 def fetch_employees_cached(user: dict):
     """Version cachée de fetch_employees"""
-    from enterprise_mediator import fetch_global_table
+    from app.services.enterprise_mediator import fetch_global_table
     return fetch_global_table("GlobalEmployee", user)
 
 @cache_table(ttl=1800, table_name="GlobalDepartment")
 def fetch_departments_cached(user: dict):
     """Version cachée de fetch_departments"""
-    from enterprise_mediator import fetch_global_table
+    from app.services.enterprise_mediator import fetch_global_table
     return fetch_global_table("GlobalDepartment", user)
 
 @cache_table(ttl=1800, table_name="GlobalProject")
 def fetch_projects_cached(user: dict):
     """Version cachée de fetch_projects"""
-    from enterprise_mediator import fetch_global_table
+    from app.services.enterprise_mediator import fetch_global_table
     return fetch_global_table("GlobalProject", user)
 
 class PerformanceMonitor:

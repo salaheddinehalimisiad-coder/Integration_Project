@@ -1,0 +1,614 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{geometry}
+\geometry{top=2.5cm, bottom=2.5cm, left=2cm, right=2cm}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta, trees, shapes.geometric, calc}
+\usepackage{tcolorbox}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{titlesec}
+\usepackage{caption}
+\usepackage{hyperref}
+\usepackage{amsmath} % Ajouté pour les formules mathématiques (Datalog)
+\usepackage{graphicx} % Ajouté pour le redimensionnement (resizebox)
+
+% Palette de couleurs professionnelle
+\definecolor{primary}{RGB}{34, 45, 50}
+\definecolor{secondary}{RGB}{0, 102, 204}
+\definecolor{pgcolor}{RGB}{51, 103, 145}
+\definecolor{mysqlcolor}{RGB}{228, 142, 0}
+\definecolor{mongocolor}{RGB}{71, 162, 72}
+\definecolor{csvcolor}{RGB}{128, 128, 128}
+\definecolor{xmlcolor}{RGB}{212, 81, 23}
+\definecolor{graphcolor}{RGB}{1, 143, 203}
+\definecolor{globalcolor}{RGB}{75, 0, 130}
+
+% Configuration des titres
+\titleformat{\section}{\color{primary}\normalfont\Large\bfseries}{\thesection}{1em}{}[{\color{secondary}\titlerule[1.5pt]}]
+\titleformat{\subsection}{\color{secondary}\normalfont\large\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\color{primary!80}\normalfont\normalsize\bfseries}{\thesubsubsection}{1em}{}
+
+\begin{document}
+
+% --- PAGE DE GARDE ---
+\begin{titlepage}
+    \centering
+    \vspace*{1.5cm}
+    {\scshape\LARGE École Militaire Polytechnique (EMP)\par}
+    \vspace{1cm}
+    {\Large Rapport de Projet d'Intégration de Données\par}
+    \vspace{1.5cm}
+    \rule{\linewidth}{1mm} \\[0.4cm]
+    {\huge\bfseries DataMediator Pro\par}
+    \vspace{0.3cm}
+    {\Large \textit{Solution Unifiée de Médiation Virtuelle Intelligente de Données Hétérogènes (RH / Projets / Finance)}}\par
+    \rule{\linewidth}{1mm} \\[1.5cm]
+    
+    \vspace{2cm}
+    \textbf{Réalisé par :}\\
+    {\Large Halimi Mohamed Salah Eddine}\\[0.5cm]
+    \textit{Élève Ingénieur en Systèmes d'Information et d'Aide à la Décision (SIAD)}
+    
+    \vfill
+    \rule{5cm}{0.4pt}\\[0.2cm]
+    {\large \today\par}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+% --- SECTION 1 ---
+\section{1. Présentation de la Solution DataMediator Pro}
+
+\subsection{1.1 Qu'est-ce que DataMediator Pro ?}
+\textbf{DataMediator Pro} est un système avancé d'intégration de l'information conçu selon l'état de l'art de la médiation de données. Sa vocation principale est d'offrir un accès unifié, homogène et transparent à un ensemble de sources de données hétérogènes, réparties et autonomes au sein de l'organisation. 
+
+Contrairement à l'approche traditionnelle de type \textit{Data Warehouse} (Entrepôt de données) qui copie et centralise physiquement toutes les transactions dans une base de données unique au prix de processus ETL lourds, le médiateur adopte une \textbf{approche virtuelle}. Il ne stocke pas les données applicatives sous-jacentes. Il maintient uniquement des métadonnées, des ontologies et des règles de correspondance (\textit{mappings}). Il interroge les sources locales à la volée en traduisant les requêtes des utilisateurs en temps réel.
+
+\subsection{1.2 Logique et Architecture}
+L'architecture de DataMediator Pro repose sur le paradigme classique \textbf{Médiateur/Adaptateur (Mediator/Wrapper)}, structuré en trois niveaux logiques bien distincts :
+
+\begin{enumerate}
+    \item \textbf{Le Schéma Global (Global Schema) :} C'est la vue consolidée et réconciliée présentée aux applications clientes, aux décideurs ou aux outils de Business Intelligence. Il fait abstraction de la localisation physique et du langage natif des sources.
+    \item \textbf{Le Médiateur (Mediator) :} C'est le cœur intelligent du système. Il embarque le moteur de réécriture de requêtes (s'appuyant sur les approches GAV - \textit{Global-As-View} et LAV - \textit{Local-As-View} via l'algorithme \textbf{MiniCon}), le planificateur d'exécution distribuée et le gestionnaire de conflits sémantiques.
+    \item \textbf{Les Wrappers (Adaptateurs) :} Chaque source de données spécifique possède un wrapper dédié agissant comme une couche d'abstraction technique. Le wrapper effectue une double traduction :
+    \begin{itemize}
+        \item \textit{Traduction descendante :} Conversion de la sous-requête algébrique du médiateur dans le langage et protocole natif de la source (SQL, MQL NoSQL, requêtes XPath ou graphe Cypher).
+        \item \textit{Traduction ascendante :} Transformation des structures de données renvoyées par la source vers le format pivot standardisé du médiateur.
+    \end{itemize}
+\end{enumerate}
+
+\subsection{1.3 Délégation et Décomposition des Tâches}
+Lorsqu'une requête SQL globale est soumise au système, le cycle de traitement applique une décomposition stricte :
+\begin{enumerate}
+    \item \textbf{Analyse syntaxique et filtrage RBAC :} Le médiateur valide la requête et élimine les attributs non autorisés selon le rôle de l'utilisateur.
+    \item \textbf{Décomposition (Query Rewriting) :} Grâce à son catalogue de mapping, le médiateur décompose la requête globale en un ensemble de \textbf{sous-requêtes indépendantes} optimisées.
+    \item \textbf{Délégation (Pushdown) :} Les sous-requêtes sont poussées directement vers les wrappers des sources locales (PostgreSQL, MySQL, MongoDB, S3/XML, Neo4j, CSV). L'effort d'extraction et de filtrage primaire est ainsi délégué aux machines sources.
+    \item \textbf{Réconciliation et Fusion en Mémoire :} Les wrappers retournent les tuples partiels. Le médiateur applique l'alignement d'identités (Fuzzy Match probabiliste de \textbf{Fellegi-Sunter}), résout les conflits de format/devises et assemble le jeu de données unifié final.
+\end{enumerate}
+
+\subsection{1.4 Architecture Globale et Flux de Traitement (Pipeline)}
+
+Le schéma ci-dessous illustre le pipeline complet de traitement d'une requête au sein de \textbf{DataMediator Pro}, de son émission par l'utilisateur jusqu'à la restitution des données unifiées.
+
+\begin{center}
+\resizebox{\textwidth}{!}{
+\begin{tikzpicture}[
+    node distance=1.5cm and 2cm,
+    base/.style={draw, thick, align=center, font=\sffamily\small, inner sep=2.5mm, rounded corners=1mm},
+    user/.style={base, ellipse, fill=primary!10, draw=primary, text width=2.5cm},
+    api/.style={base, rectangle, fill=secondary!10, draw=secondary},
+    decision/.style={base, diamond, fill=red!10, draw=red, aspect=2, text width=3.5cm, inner sep=0mm},
+    process/.style={base, rectangle, fill=gray!10, draw=gray!80, text width=3.8cm},
+    db/.style={base, cylinder, shape border rotate=90, aspect=0.25, fill=pgcolor!10, draw=pgcolor, text width=2cm, minimum height=1.5cm},
+    arrow/.style={-{Latex[length=3mm]}, thick, draw=primary!80},
+    lbl/.style={font=\scriptsize\sffamily, fill=white, inner sep=2pt, text=primary}
+]
+
+% Colonne Centrale (Descente de la requête)
+\node[user] (user) {Utilisateur / UI};
+\node[api, below=1.5cm of user] (api) {Médiateur FastAPI};
+\node[decision, below=1.5cm of api] (rbac) {Vérification Rôles \& Masquage};
+\node[process, below=1.5cm of rbac] (parser) {Parseur SQLGlot};
+\node[process, below=1.5cm of parser] (rewriter) {Moteur de Réécriture\\GAV / LAV};
+
+% Branchement GAV / LAV
+\node[process, below left=1.2cm and -0.8cm of rewriter] (minicon) {Algorithme MiniCon\\(LAV)};
+\node[process, below right=1.2cm and -0.8cm of rewriter] (gav) {Dépliage Direct\\(GAV)};
+
+% Moteur d'exécution
+\node[process, below=3.5cm of rewriter, fill=secondary!20, draw=secondary, text width=7cm] (exec) {Moteur d'Exécution Distribué};
+
+% Sources de données (En bas du moteur d'exécution)
+\node[db, below left=1.5cm and 1cm of exec] (db1) {PostgreSQL};
+\node[db, right=0.5cm of db1] (db2) {MySQL};
+\node[db, right=0.5cm of db2] (db3) {XML API};
+\node[db, below=1cm of db1] (db4) {MongoDB};
+\node[db, right=0.5cm of db4] (db5) {Graphe JSON};
+\node[db, right=0.5cm of db5] (db6) {CSV Legacy};
+
+% Colonne Droite (Remontée des données)
+\node[process, right=2cm of exec, fill=mongocolor!10, draw=mongocolor] (entity) {4. Réconciliation \&\\De-duplication\\(Fellegi-Sunter)};
+\node[process, above=2cm of entity, fill=mongocolor!10, draw=mongocolor] (conflict) {5. Résolution Conflits\\(Unités \& Devises)};
+
+% Traçage des Flèches
+\draw[arrow] (user) -- node[lbl] {Requête SQL / JWT} (api);
+\draw[arrow] (api) -- node[lbl] {1. Sécurité} (rbac);
+\draw[arrow] (rbac) -- node[lbl] {2. Analyse SQL} (parser);
+\draw[arrow] (parser) -- node[lbl] {3. Réécriture} (rewriter);
+
+\draw[arrow] (rewriter) -| (minicon);
+\draw[arrow] (rewriter) -| (gav);
+
+\draw[arrow] (minicon) |- (exec);
+\draw[arrow] (gav) |- (exec);
+
+% Flèches vers les DB
+\draw[arrow] (exec) -- (db1);
+\draw[arrow] (exec) -- (db2);
+\draw[arrow] (exec) -- (db3);
+\draw[arrow] (exec) -- (db4);
+\draw[arrow] (exec) -- (db5);
+\draw[arrow] (exec) -- (db6);
+
+% Flèches de remontée
+\draw[arrow] (exec) -- node[lbl, pos=0.5] {Extraction Brute} (entity);
+\draw[arrow] (entity) -- (conflict);
+\draw[arrow] (conflict) |- node[lbl, near start] {Données Unifiées} (user);
+
+\end{tikzpicture}
+}
+\captionof{figure}{Architecture Globale du Moteur de Médiation (DataMediator Pro)}
+\end{center}
+
+\subsubsection*{Explication Détaillée du Flux (Pipeline) :}
+
+Le traitement d'une requête traverse cinq étapes critiques (représentées sur le diagramme) :
+
+\begin{enumerate}
+    \item \textbf{Sécurité et RBAC (Role-Based Access Control) :} Dès la réception de la requête SQL globale et du token JWT, le médiateur vérifie les droits de l'utilisateur. Si un utilisateur (ex: Chef de Projet) demande la colonne \texttt{salary\_eur} à laquelle il n'a pas accès, le système modifie dynamiquement l'Arbre Syntaxique Abstrait (AST) pour masquer ou rejeter cette colonne \textit{avant} toute exécution.
+    
+    \item \textbf{Analyse SQL (Parsing) :} La requête globale est analysée par le parseur (\texttt{SQLGlot}). Le texte SQL est transformé en une structure de données arborescente compréhensible par la machine, vérifiant la conformité de la syntaxe par rapport au Schéma Global.
+    
+    \item \textbf{Réécriture (GAV / LAV) :} C'est le cerveau théorique du projet. 
+    \begin{itemize}
+        \item Si la donnée cible est modélisée en \textbf{GAV (Global-As-View)}, le moteur effectue un simple dépliage de la requête (substitution de la vue globale par les tables sources).
+        \item Si la donnée est modélisée en \textbf{LAV (Local-As-View)}, le système déclenche l'algorithme \textbf{MiniCon}. Il calcule les sous-buts (MCDs) et cherche la combinaison optimale des sources locales capables de répondre à la question.
+    \end{itemize}
+    
+    \item \textbf{Délégation et Exécution Distribuée :} Le plan d'exécution généré est découpé en sous-requêtes traduites dans les langages natifs des sources (SQL pour PostgreSQL/MySQL, objets JSON pour MongoDB, requêtes XPath pour XML, etc.). Ces requêtes sont envoyées simultanément aux sources pour une exécution parallèle.
+    
+    \item \textbf{Réconciliation et Résolution des Conflits :}
+    \begin{itemize}
+        \item \textbf{Fuzzy Matching (Fellegi-Sunter) :} Les données brutes remontées par les sources sont souvent asymétriques. Le moteur de réconciliation identifie que "M. Salah" (Source 1) et "Salah Eddine" (Source 2) sont potentiellement la même entité et fusionne leurs enregistrements de manière probabiliste.
+        \item \textbf{Normalisation :} Les conflits de format (dates) et d'unités (conversion des salaires DZD en EUR) sont résolus à la volée. Le résultat final unifié est alors renvoyé à l'utilisateur.
+    \end{itemize}
+\end{enumerate}
+
+\newpage
+
+
+% --- SECTION 2 ---
+\section{2. Concepts Théoriques et Algorithmiques}
+
+\subsection{2.1 Approches d'Intégration : GAV et LAV}
+Le projet implémente les deux approches fondamentales de l'intégration de données :
+\begin{itemize}
+    \item \textbf{GAV (Global-As-View)} : Le schéma global est défini comme une vue sur les sources locales. La réécriture de requêtes est relativement simple et se fait par dépliage (unfolding).
+    \item \textbf{LAV (Local-As-View)} : Les sources locales sont définies comme des vues sur le schéma global. Cette approche est beaucoup plus flexible pour l'ajout de nouvelles sources, mais nécessite des algorithmes de réécriture complexes pour répondre aux requêtes. Notre système utilise l'algorithme \textbf{MiniCon}.
+\end{itemize}
+
+\subsection{2.2 Illustration de l'Algorithme MiniCon (Exemple Pratique)}
+Voici un exemple pas-à-pas pour illustrer comment l'algorithme MiniCon résout une requête dans l'architecture en utilisant la Source S1 (PostgreSQL) et la Source S3 (MongoDB).
+Pour que l'algorithme fonctionne, nous utilisons la notation logique formelle (\textit{Datalog}).
+
+\subsubsection{Étape 1 : Le Contexte Initial (Configuration LAV)}
+Dans l'approche Local-As-View, on définit d'abord un Schéma Global abstrait (le dictionnaire de l'entreprise), puis on décrit les sources existantes comme des vues de ce schéma.
+
+\textbf{Le Schéma Global ($G$)} :
+Imaginons un concept global $EmployeGlobal$ qui regroupe toutes les informations possibles.
+
+\textbf{Les Sources (Vues locales)} :
+MiniCon enregistre les bases de données sous forme de règles logiques.
+\begin{itemize}
+    \item $V_1$ (Source S1 - PostgreSQL) : Connaît l'identité et le département, mais pas le salaire.
+    \item $V_2$ (Source S3 - MongoDB) : Connaît le matricule et le salaire.
+\end{itemize}
+
+\subsubsection{Étape 2 : La Requête Utilisateur ($Q$)}
+Un utilisateur demande via le tableau de bord : \textit{"Je veux le nom, le prénom et le salaire de l'employé dont le matricule est 'EMP-100'."}
+
+Le médiateur reçoit cette requête sur le schéma global :
+\begin{equation}
+Q(n, p, s) \leftarrow EmployeGlobal(\text{'EMP-100'}, n, p, d, s)
+\end{equation}
+\textit{(Ici, $n$ = nom, $p$ = prénom, $s$ = salaire. Le 'EMP-100' est une constante, et $d$ est une variable ignorée par l'utilisateur).}
+
+\subsubsection{Étape 3 : Exécution de MiniCon}
+C'est ici que l'algorithme opère pour diviser et conquérir cette requête.
+
+\textbf{Phase 1 : Formation des MCDs (MiniCon Descriptions)} \\
+L'algorithme examine le but de la requête et cherche quelles vues peuvent fournir les pièces du puzzle.
+\begin{itemize}
+    \item \textbf{Analyse de $V_1$ (PostgreSQL)} : MiniCon voit que $V_1$ peut fournir le nom ($n$) et le prénom ($p$), et peut appliquer le filtre sur le matricule ('EMP-100'). L'algorithme crée un bloc logique valide appelé \textbf{MCD 1}. \\
+    \textit{MCD 1 prend en charge : le matricule, le nom, le prénom.}
+    \item \textbf{Analyse de $V_2$ (MongoDB)} : MiniCon voit que $V_2$ peut fournir le salaire ($s$) et peut également appliquer le filtre sur le matricule ('EMP-100'). L'algorithme crée un deuxième bloc logique appelé \textbf{MCD 2}. \\
+    \textit{MCD 2 prend en charge : le matricule, le salaire.}
+\end{itemize}
+
+\textbf{Phase 2 : La Combinaison} \\
+MiniCon cherche maintenant la combinaison la moins coûteuse de MCDs qui couvre exactement ce que l'utilisateur a demandé ($n, p, s$). Il assemble MCD 1 et MCD 2 en faisant une jointure sur leur point commun (le matricule).
+La requête est formellement réécrite :
+\begin{equation}
+Q_{rewritten}(n, p, s) \leftarrow V_1(\text{'EMP-100'}, n, p) \wedge V_2(\text{'EMP-100'}, s)
+\end{equation}
+
+\subsubsection{Étape 4 : Traduction et Fédération (L'Action Finale)}
+Le fichier principal du médiateur (\texttt{enterprise\_mediator.py}) prend le relais et traduit cette réécriture logique en requêtes natives :
+
+\begin{tcolorbox}[colback=black!5, colframe=primary, title=1. Envoi à PostgreSQL (S1)]
+\begin{verbatim}
+SELECT last_name, first_name 
+FROM EMPLOYEES 
+WHERE matricule = 'EMP-100';
+\end{verbatim}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=black!5, colframe=primary, title=2. Envoi à MongoDB (S3)]
+\begin{verbatim}
+db.payroll.find(
+    { employeeMatricule: "EMP-100" },
+    { monthlySalaryDzd: 1, _id: 0 }
+);
+\end{verbatim}
+\end{tcolorbox}
+
+\textbf{3. La Fusion (In-Memory)} : \\
+PostgreSQL renvoie \texttt{\{"last\_name": "Brahimi", "first\_name": "Amine"\}}. \\
+MongoDB renvoie \texttt{\{"monthlySalaryDzd": 150000\}}. \\
+Le médiateur assemble ces deux retours en un seul objet JSON et l'affiche sur l'interface React. L'utilisateur obtient sa réponse unifiée sans jamais savoir que les données étaient physiquement séparées.
+
+\newpage
+
+% --- SECTION 3 ---
+\section{3. Analyse des Sources Locales (Schémas et Diagrammes)}
+Le système DataMediator Pro unifie 6 sources profondément hétérogènes. Voici l'analyse structurelle de chaque modèle local.
+
+\subsection{3.1 Source S1 : PostgreSQL (Ressources Humaines)}
+Cette base relationnelle SQL constitue le référentiel maître concernant l'état civil des employés et l'organisation des départements.
+
+\begin{center}
+\begin{tikzpicture}[node distance=3cm]
+    \node (dept) {
+        \renewcommand{\arraystretch}{1.2}
+        \begin{tabular}{|l|}
+        \hline
+        \rowcolor{pgcolor}\color{white}\textbf{\textsf{DEPARTMENTS}} \\
+        \hline
+        \underline{\textbf{dept\_id}} : INT (PK, SERIAL) \\
+        dept\_code : VARCHAR(20) [UNIQUE] \\
+        dept\_name : VARCHAR(100) \\
+        country : VARCHAR(2) \\
+        \hline
+        \end{tabular}
+    };
+    \node[right=2.5cm of dept] (emp) {
+        \renewcommand{\arraystretch}{1.2}
+        \begin{tabular}{|l|}
+        \hline
+        \rowcolor{pgcolor}\color{white}\textbf{\textsf{EMPLOYEES}} \\
+        \hline
+        \underline{\textbf{emp\_id}} : INT (PK, SERIAL) \\
+        matricule : VARCHAR(30) [UNIQUE] \\
+        first\_name : VARCHAR(80) \\
+        last\_name : VARCHAR(80) \\
+        email : VARCHAR(120) [UNIQUE] \\
+        birth\_date : DATE \\
+        salary\_eur : NUMERIC(12,2) \\
+        \textit{dept\_id} : INT (FK) \\
+        status : VARCHAR(20) \\
+        \hline
+        \end{tabular}
+    };
+    \draw[-{Latex[length=3mm,width=3mm]}, thick, pgcolor] (emp) -- node[above, font=\sffamily\small] {contient} (dept);
+\end{tikzpicture}
+\captionof{figure}{MCD S1 : Relationnel PostgreSQL (RH)}
+\end{center}
+
+\subsection{3.2 Source S2 : MySQL (Suivi des Projets)}
+Base relationnelle conçue pour l'affectation des consultants sur les projets et la gestion de la charge.
+
+\begin{center}
+\begin{tikzpicture}[node distance=1.5cm and 2.5cm]
+    \node (cons) {
+        \renewcommand{\arraystretch}{1.2}
+        \begin{tabular}{|l|}
+        \hline
+        \rowcolor{mysqlcolor}\color{white}\textbf{\textsf{CONSULTANTS}} \\
+        \hline
+        \underline{\textbf{consultant\_code}} : VARCHAR(30) (PK) \\
+        complete\_name : VARCHAR(160) \\
+        mail : VARCHAR(120) \\
+        business\_unit : VARCHAR(100) \\
+        active : TINYINT \\
+        \hline
+        \end{tabular}
+    };
+    \node[below=0.8cm of cons] (assign) {
+        \renewcommand{\arraystretch}{1.2}
+        \begin{tabular}{|l|}
+        \hline
+        \rowcolor{mysqlcolor}\color{white}\textbf{\textsf{ASSIGNMENTS}} \\
+        \hline
+        \underline{\textit{\textbf{consultant\_code}}} : VARCHAR(30) (PK, FK) \\
+        \underline{\textit{\textbf{project\_code}}} : VARCHAR(30) (PK, FK) \\
+        job\_title : VARCHAR(80) \\
+        allocation\_percent : INT \\
+        \hline
+        \end{tabular}
+    };
+    \node[right=2cm of assign] (proj) {
+        \renewcommand{\arraystretch}{1.2}
+        \begin{tabular}{|l|}
+        \hline
+        \rowcolor{mysqlcolor}\color{white}\textbf{\textsf{PROJECTS}} \\
+        \hline
+        \underline{\textbf{project\_code}} : VARCHAR(30) (PK) \\
+        label : VARCHAR(120) \\
+        client\_name : VARCHAR(120) \\
+        state : VARCHAR(20) \\
+        start\_dt : DATETIME \\
+        end\_dt : DATETIME \\
+        \hline
+        \end{tabular}
+    };
+    \draw[-{Latex[length=3mm,width=3mm]}, thick, mysqlcolor] (assign) -- node[left, font=\sffamily\small] {est affecté} (cons);
+    \draw[-{Latex[length=3mm,width=3mm]}, thick, mysqlcolor] (assign) -- node[above, font=\sffamily\small] {reçoit} (proj);
+\end{tikzpicture}
+\captionof{figure}{MCD S2 : Relationnel MySQL (Projets)}
+\end{center}
+
+\subsection{3.3 Source S3 : MongoDB (Finances \& Payroll)}
+Base de données NoSQL orientée document stockant les salaires sous forme dénormalisée.
+
+\begin{center}
+\begin{tikzpicture}[node distance=3cm]
+    \node (doc) {
+        \renewcommand{\arraystretch}{1.2}
+        \begin{tabular}{|l|}
+        \hline
+        \rowcolor{mongocolor}\color{white}\textbf{\textsf{PayrollDocument}} \\
+        \hline
+        \textbf{docId} : String (PK) \\
+        nationalId : String \\
+        employeeMatricule : String \\
+        \textbf{name} : Name (Objet imbriqué) \\
+        monthlySalaryDzd : Number \\
+        bonusDzd : Number \\
+        currency : String \\
+        riskLevel : String \\
+        visibleToRoles : Array[String] \\
+        \hline
+        \end{tabular}
+    };
+    \node[right=2.5cm of doc] (name) {
+        \renewcommand{\arraystretch}{1.2}
+        \begin{tabular}{|l|}
+        \hline
+        \rowcolor{mongocolor}\color{white}\textbf{\textsf{Name}} \\
+        \hline
+        first : String \\
+        last : String \\
+        \hline
+        \end{tabular}
+    };
+    \draw[thick, mongocolor, -{Diamond[open, length=4mm, width=4mm]}] (name) -- node[above, font=\sffamily\small] {nested} (doc);
+\end{tikzpicture}
+\captionof{figure}{Structure S3 : Document MongoDB (Finances)}
+\end{center}
+
+\subsection{3.4 Source S4 : CSV Legacy (Données RH Historiques)}
+Fichier plat (\textit{Flat File}) issu d'un ancien système d'archivage historique sans typage physique fort.
+
+\begin{center}
+\begin{tcolorbox}[colback=csvcolor!5, colframe=csvcolor, title=\textbf{Structure de S4 : employees\_legacy.csv}, fonttitle=\sffamily\bfseries]
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabularx}{\linewidth}{>{\bfseries\ttfamily}l >{\ttfamily}l X}
+        \rowcolor{csvcolor!20} \textsf{Colonne} & \textsf{Type Logique} & \textsf{Description \& Rôle} \\
+        legacy\_id & String (PK) & Identifiant historique unique (ex: \texttt{L-001}) \\
+        nom\_prenom & String & Identité brute concaténée sous la forme \texttt{NOM Prénom} \\
+        email & String & Courriel historique de contact \\
+        dept & String & Libellé ou code abrégé du département \\
+        pays & String & Code pays à la norme ISO (2 lettres) \\
+        grade & String & Niveau hiérarchique de l'époque \\
+    \end{tabularx}
+\end{tcolorbox}
+\end{center}
+
+\subsection{3.5 Source S5 : XML Evaluations (API de Performance)}
+Flux semi-structuré extrait d'une API tierce contenant les revues de performances annuelles.
+
+\begin{center}
+\begin{tikzpicture}[
+    edge from parent fork down,
+    sibling distance=6cm,
+    level distance=1.8cm,
+    every node/.style={draw, rectangle, rounded corners, thick, draw=xmlcolor, fill=xmlcolor!10, font=\ttfamily, align=center, inner sep=2mm},
+    edge from parent/.style={thick, draw=xmlcolor, -{Latex[length=2mm]}}
+]
+\node {<Evaluations>}
+    child { node {<Eval> \\ \small @employeeMail='amine.brahimi@univ-dz.dz'}
+        child { node {<Score>98</Score>} }
+        child { node {<Feedback>Expert IA...</Feedback>} }
+    }
+    child { node {<Eval> \\ \small @employeeMail='s.mansouri@it-dz.com'}
+        child { node {<Score>85</Score>} }
+        child { node {<Feedback>Très bonne gestion...</Feedback>} }
+    };
+\end{tikzpicture}
+\captionof{figure}{Structure S5 : Arbre Hiérarchique XML (Performances)}
+\end{center}
+
+\subsection{3.6 Source S6 : Graphe JSON (Neo4j Skills)}
+Base orientée graphe modélisant le réseau interconnecté des compétences de l'entreprise.
+
+\begin{center}
+\begin{tikzpicture}[
+    node distance=2cm and 3cm,
+    emp/.style={circle, draw=graphcolor, fill=graphcolor!20, thick, text width=2.3cm, align=center, font=\sffamily\small},
+    skill/.style={rectangle, rounded corners, draw=graphcolor, fill=white, thick, text width=2.5cm, align=center, font=\sffamily\small\bfseries},
+    edge/.style={-{Latex[length=3mm,width=3mm]}, thick, draw=graphcolor}
+]
+    \node[emp] (emp1) {Employee \\ \ttfamily EMP-001 \\ \normalfont A. Brahimi};
+    \node[emp, below=2cm of emp1] (emp2) {Employee \\ \ttfamily EMP-003 \\ \normalfont M. Khelifi};
+
+    \node[skill, right=3.5cm of emp1] (sk1) {Skill: ML \\ Machine Learning};
+    \node[skill, below=0.4cm of sk1] (sk2) {Skill: K8S \\ Kubernetes};
+    \node[skill, right=3.5cm of emp2] (sk3) {Skill: SEC \\ Pentest};
+
+    \draw[edge] (emp1) -- node[above, sloped, font=\scriptsize] {KNOWS (Expert)} (sk1);
+    \draw[edge] (emp1) -- node[above, sloped, font=\scriptsize] {KNOWS (Senior)} (sk2);
+    \draw[edge] (emp2) -- node[above, sloped, font=\scriptsize] {KNOWS (Advanced)} (sk3);
+\end{tikzpicture}
+\captionof{figure}{Structure S6 : Graphe No-SQL (Compétences)}
+\end{center}
+
+\newpage
+
+% --- SECTION 4 ---
+\section{4. Conflits d'Intégration et Stratégies de Résolution}
+L'unification de ces six mondes impose au médiateur d'identifier et de résoudre dynamiquement quatre grandes catégories de conflits.
+
+\subsection{4.1 Conflits Sémantiques}
+\begin{itemize}
+    \item \textbf{Synonymie des identifiants :} L'entité centrale de l'employé est référencée par des clés aux appellations distinctes : \texttt{matricule} (S1), \texttt{consultant\_code} (S2), \texttt{employeeMatricule} (S3) et \texttt{legacy\_id} (S4). 
+    \\ \textit{Résolution :} Définition d'un dictionnaire de mapping global liant sémantiquement ces attributs à un pivot unique baptisé \textbf{\texttt{global\_emp\_id}}.
+    \item \textbf{Homonymie de champs :} Le mot \texttt{status} dans S1 décrit la situation contractuelle (Actif/Inactif), tandis que \texttt{state} dans S2 représente l'avancement d'un projet.
+    \\ \textit{Résolution :} Levée de l'ambiguïté par renommage strict au niveau du Schéma Global (\texttt{employee\_status} et \texttt{project\_status}).
+\end{itemize}
+
+\subsection{4.2 Conflits Structurels et Schématiques}
+\begin{itemize}
+    \item \textbf{Hétérogénéité de granularité (Noms) :} S1 sépare le nom et le prénom. S2 regroupe (\texttt{complete\_name}), S3 hiérarchise sous forme d'objet (\texttt{name.first}), et S4 concatène en lettres capitales (\texttt{nom\_prenom}).
+    \\ \textit{Résolution :} Injection de fonctions de parsing procédurales au niveau des wrappers. Par exemple, le wrapper S4 découpe la chaîne brute par expression régulière (\texttt{RegexSplit}) pour alimenter les colonnes distinctes du schéma réconcilié.
+    \item \textbf{Divergence de Paradigmes :} Fusionner des tables relationnelles avec un graphe topologique ou un arbre XML.
+    \\ \textit{Résolution :} Technique d'aplatissement (\textit{Flattening}). Le wrapper Neo4j convertit les arcs orientés du graphe en un flux virtuel de tuples relationnels \texttt{(global\_emp\_id, skill\_name, proficiency\_level)}.
+\end{itemize}
+
+\subsection{4.3 Conflits de Types et de Formats}
+\begin{itemize}
+    \item \textbf{Conflits d'Échelles et Devises :} Les salaires sont stipulés en Euros dans S1 et en Dinars Algériens (DZD) dans S3.
+    \\ \textit{Résolution :} Intégration d'un module de conversion monétaire dynamique dans le médiateur, recalculant tous les flux financiers vers une unité pivot unifiée (\texttt{base\_salary\_eur}).
+    \item \textbf{Incompatibilité temporelle :} S1 applique le type SQL \texttt{DATE} alors que S2 stocke des horodatages \texttt{DATETIME}.
+    \\ \textit{Résolution :} Normalisation systématique au format ISO-8601 lors de la phase ascendante.
+\end{itemize}
+
+\subsection{4.4 Conflits de Données (Vérité et Incohérence)}
+\begin{itemize}
+    \item \textbf{Redondance et divergences de valeurs :} Un même employé possède un e-mail orthographié différemment entre le vieux système CSV (S4) et la base maîtresse PostgreSQL (S1).
+    \\ \textit{Résolution : Rules of Data Survivorship.} Le médiateur attribue des coefficients de confiance aux sources. PostgreSQL (S1) est désignée comme la \textbf{Source de Vérité (Source of Truth)}. En cas de collision sur une valeur, la donnée de S1 évince automatiquement celle de S4.
+\end{itemize}
+
+\newpage
+
+% --- SECTION 5 ---
+\section{5. Schéma Global Unifié (Schéma Réconcilié)}
+Une fois les conflits neutralisés par le médiateur, l'infrastructure hétérogène s'efface. L'utilisateur interagit avec un schéma réconcilié cohérent et centralisé.
+
+\begin{center}
+\begin{tikzpicture}[
+    node distance=1.2cm and 2cm,
+    globalent/.style={draw, rectangle, rounded corners, fill=globalcolor!5, draw=globalcolor, thick, align=left, font=\sffamily\small},
+    rel/.style={-{Latex[length=2.5mm]}, thick, draw=globalcolor}
+]
+    % Entité Centrale
+    \node[globalent, text width=5.5cm] (emp) {
+        {\color{globalcolor}\textbf{Global\_Employee}} \\
+        \rule{\linewidth}{0.4pt}
+        \underline{\textbf{global\_emp\_id}} (PK) \\
+        first\_name \textit{[Standardisé]} \\
+        last\_name \textit{[Standardisé]} \\
+        professional\_email \textit{[S1]} \\
+        birth\_date \\
+        employee\_status
+    };
+
+    % Départements
+    \node[globalent, above left=1.2cm and 0.5cm of emp, text width=4cm] (dept) {
+        {\color{globalcolor}\textbf{Global\_Department}} \\
+        \rule{\linewidth}{0.4pt}
+        \underline{\textbf{dept\_code}} (PK) \\
+        dept\_name \\
+        country
+    };
+
+    % Performances (XML)
+    \node[globalent, below left=1.5cm and 0.5cm of emp, text width=4.5cm] (perf) {
+        {\color{globalcolor}\textbf{Global\_Performance}} \\
+        \rule{\linewidth}{0.4pt}
+        \underline{\textit{\textbf{global\_emp\_id}}} (PK, FK) \\
+        annual\_score \\
+        qualitative\_feedback
+    };
+
+    % Finances (MongoDB)
+    \node[globalent, above right=1.2cm and 0.5cm of emp, text width=4.8cm] (pay) {
+        {\color{globalcolor}\textbf{Global\_Payroll\_Record}} \\
+        \rule{\linewidth}{0.4pt}
+        \underline{\textit{\textbf{global\_emp\_id}}} (PK, FK) \\
+        base\_salary\_eur \textit{[Converti]} \\
+        bonus\_eur
+    };
+
+    % Compétences (Graphe)
+    \node[globalent, right=2cm of emp, text width=4.8cm] (skill) {
+        {\color{globalcolor}\textbf{Global\_Skill\_Profile}} \\
+        \rule{\linewidth}{0.4pt}
+        \underline{\textit{\textbf{global\_emp\_id}}} (PK, FK) \\
+        \underline{\textbf{skill\_name}} (PK) \\
+        proficiency\_level
+    };
+
+    % Jointure Projets
+    \node[globalent, below right=1.5cm and 0.5cm of emp, text width=4.8cm] (assign) {
+        {\color{globalcolor}\textbf{Global\_Assignment}} \\
+        \rule{\linewidth}{0.4pt}
+        \underline{\textit{\textbf{global\_emp\_id}}} (PK, FK) \\
+        \underline{\textit{\textbf{project\_code}}} (PK, FK) \\
+        role \\
+        allocation\_percent
+    };
+
+    % Projets (MySQL)
+    \node[globalent, below=1cm of assign, text width=4.5cm] (proj) {
+        {\color{globalcolor}\textbf{Global\_Project}} \\
+        \rule{\linewidth}{0.4pt}
+        \underline{\textbf{project\_code}} (PK) \\
+        project\_name \\
+        client\_name \\
+        project\_status
+    };
+
+    % Tracé des liens logiques
+    \draw[rel] (emp) -- node[above, sloped, font=\tiny] {emploie} (dept);
+    \draw[rel] (emp) -- node[above, sloped, font=\tiny] {évalué par} (perf);
+    \draw[rel] (emp) -- node[above, sloped, font=\tiny] {reçoit} (pay);
+    \draw[rel] (emp) -- node[above, sloped, font=\tiny] {possède} (skill);
+    \draw[rel] (emp) -- node[above, sloped, font=\tiny] {affecté à} (assign);
+    \draw[rel] (proj) -- node[right, font=\tiny] {concerne} (assign);
+\end{tikzpicture}
+\captionof{figure}{MCD Global Unifié et Réconcilié - Vue Virtuelle Finie}
+\end{center}
+
+\subsection*{Synthèse Applicative et Conclusion}
+L'avantage magistral de cette architecture virtuelle réside dans sa capacité à résoudre des requêtes transversales complexes sans aucune duplication physique. Prenons l'exemple d'une requête décisionnelle de haut niveau : \\
+\textit{« Extraire le nom des ingénieurs (S1) ayant un salaire supérieur à 4000 € (S3), disposant d'une expertise certifiée en Machine Learning dans le graphe (S6), ayant obtenu une note d'évaluation supérieure à 90\% depuis l'API XML (S5), et afficher les projets MySQL (S2) sur lesquels ils sont actuellement staffés. »}
+
+Le médiateur orchestre l'ensemble de manière transparente : il sollicite en parallèle les moteurs natifs via leurs wrappers respectifs, rapatrie les fragments de données dans le format pivot, exécute les jointures à la volée en mémoire vive à l'aide des clés réconciliées (Entity Reconciliation), applique les règles de masquage RBAC, et sert un tableau de résultats unique et sécurisé à l'utilisateur en quelques millisecondes.
+
+\end{document}

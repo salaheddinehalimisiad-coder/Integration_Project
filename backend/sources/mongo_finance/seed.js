@@ -14,9 +14,9 @@ db.payroll.insertMany([
   },
   {
     docId: "PAY-002",
-    nationalId: "FR-2044",
+    nationalId: "DZ-2044",
     employeeMatricule: "EMP-002",
-    name: { first: "Claire", last: "Martin" },
+    name: { first: "Sarah", last: "Mansouri" },
     monthlySalaryDzd: 610000,
     bonusDzd: 120000,
     currency: "DZD",
@@ -41,6 +41,50 @@ db.payroll.insertMany([
     name: { first: "Nour", last: "Ait Salem" },
     monthlySalaryDzd: 390000,
     bonusDzd: 70000,
+    currency: "DZD",
+    riskLevel: "HIGH",
+    visibleToRoles: ["ADMIN", "FINANCE_OFFICER"]
+  },
+  {
+    docId: "PAY-005",
+    nationalId: "DZ-6006",
+    employeeMatricule: "EMP-007",
+    name: { first: "Tarek", last: "Bouzid" },
+    monthlySalaryDzd: 650000,
+    bonusDzd: 150000,
+    currency: "DZD",
+    riskLevel: "LOW",
+    visibleToRoles: ["ADMIN", "HR_MANAGER", "FINANCE_OFFICER"]
+  },
+  {
+    docId: "PAY-006",
+    nationalId: "DZ-7007",
+    employeeMatricule: "EMP-008",
+    name: { first: "Kenza", last: "Belkacem" },
+    monthlySalaryDzd: 380000,
+    bonusDzd: 60000,
+    currency: "DZD",
+    riskLevel: "LOW",
+    visibleToRoles: ["ADMIN", "HR_MANAGER", "FINANCE_OFFICER"]
+  },
+  {
+    docId: "PAY-007",
+    nationalId: "DZ-8008",
+    employeeMatricule: "C-771",
+    name: { first: "Nour", last: "Ait Salem" },
+    monthlySalaryDzd: 420000,
+    bonusDzd: 50000,
+    currency: "DZD",
+    riskLevel: "MEDIUM",
+    visibleToRoles: ["ADMIN", "FINANCE_OFFICER"]
+  },
+  {
+    docId: "PAY-008",
+    nationalId: "DZ-9009",
+    employeeMatricule: "C-505",
+    name: { first: "Hamza", last: "Chergui" },
+    monthlySalaryDzd: 480000,
+    bonusDzd: 75000,
     currency: "DZD",
     riskLevel: "HIGH",
     visibleToRoles: ["ADMIN", "FINANCE_OFFICER"]

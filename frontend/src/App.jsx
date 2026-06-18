@@ -54,18 +54,29 @@ function AppContent() {
   const handleLogin = useCallback((userData) => {
     setUser(userData);
     setShowLoading(true);
-  }, []);
+    const u = userData?.user || userData || {};
+    toast.info(
+      `Bienvenue, ${u.name || u.username || 'Utilisateur'} !`,
+      `Rôle : ${u.role || 'Inconnu'}`,
+      { image: '/logo.png', duration: 5000 }
+    );
+  }, [toast]);
 
   const handleLoadingComplete = useCallback(() => {
     setShowLoading(false);
   }, []);
 
   const handleLogout = useCallback(() => {
+    const currentUser = user?.user || user || {};
     setUser(null);
     localStorage.removeItem('dm_token');
     localStorage.removeItem('dm_user');
-    toast.info('Déconnecté', 'À bientôt.');
-  }, [toast]);
+    toast.info(
+      'Déconnexion réussie',
+      currentUser.name || currentUser.username ? `À bientôt, ${currentUser.name || currentUser.username} !` : 'À bientôt.',
+      { image: '/logo.png', duration: 4000 }
+    );
+  }, [user, toast]);
 
   if (!booted) return null;
 
